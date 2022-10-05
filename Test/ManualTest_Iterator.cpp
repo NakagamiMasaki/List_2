@@ -9,6 +9,10 @@
 #include "../List_2/LinkedList.h"
 #include "ManualTest_Iterator.h"
 
+/**
+* @namespace	ex02_Iterator
+* @brief		イテレータのテスト
+*/
 namespace ex02_Iterator
 {
 

@@ -21,8 +21,8 @@ LinkedList::ConstIterator::ConstIterator(void)
 LinkedList::ConstIterator& LinkedList::ConstIterator::operator--(void)
 {
 	// リストの先頭方向に1つ進む
-	assert(m_pCurrentNode && m_pList && "適切な参照がありません。");
-	assert(m_pCurrentNode->pPrev->Data.Name != "DummyNode");
+	assert(m_pCurrentNode && m_pList && "適切な参照がありません。");		// リストを参照しているか？
+	assert(m_pCurrentNode->pPrev->Data.Name != "DummyNode");		// 先頭ノードを既に指しているのに、さらに前に進もうとしていないか？
 	m_pCurrentNode = m_pCurrentNode->pPrev;
 	return *this;
 }
@@ -30,8 +30,8 @@ LinkedList::ConstIterator& LinkedList::ConstIterator::operator--(void)
 LinkedList::ConstIterator& LinkedList::ConstIterator::operator++(void)
 {
 	// リストの末尾方向に1つ進む
-	assert(m_pCurrentNode && m_pList && "適切な参照がありません。");
-	assert(m_pCurrentNode->Data.Name != "DummyNode");
+	assert(m_pCurrentNode && m_pList && "適切な参照がありません。");		// リストを参照しているか？
+	assert(m_pCurrentNode->Data.Name != "DummyNode");				// ダミーノードを指しているのに、さらに進もうとしていないか？
 	m_pCurrentNode = m_pCurrentNode->pNext;
 	return *this;
 }
@@ -39,8 +39,8 @@ LinkedList::ConstIterator& LinkedList::ConstIterator::operator++(void)
 LinkedList::ConstIterator LinkedList::ConstIterator::operator--(int)
 {
 	// リストの先頭方向に1つ進む
-	assert(m_pCurrentNode && m_pList && "適切な参照がありません。");
-	assert(m_pCurrentNode->pPrev->Data.Name != "DummyNode");
+	assert(m_pCurrentNode && m_pList && "適切な参照がありません。");		// リストを参照しているか？
+	assert(m_pCurrentNode->pPrev->Data.Name != "DummyNode");		// 先頭ノードを既に指しているのに、さらに前に進もうとしていないか？
 	LinkedList::ConstIterator TempItr = *this;	// コピーする
 	m_pCurrentNode = m_pCurrentNode->pPrev;
 
@@ -50,8 +50,8 @@ LinkedList::ConstIterator LinkedList::ConstIterator::operator--(int)
 LinkedList::ConstIterator LinkedList::ConstIterator::operator++(int)
 {
 	// リストの末尾方向に1つ進む
-	assert(m_pCurrentNode && m_pList && "適切な参照がありません。");
-	assert(m_pCurrentNode->Data.Name != "DummyNode");
+	assert(m_pCurrentNode && m_pList && "適切な参照がありません。");		// リストを参照しているか？
+	assert(m_pCurrentNode->Data.Name != "DummyNode");				// ダミーノードを指しているのに、さらに進もうとしていないか？
 	LinkedList::ConstIterator TempItr = *this;	// コピーする
 	m_pCurrentNode = m_pCurrentNode->pNext;
 
@@ -60,13 +60,13 @@ LinkedList::ConstIterator LinkedList::ConstIterator::operator++(int)
 
 const ScoreData& LinkedList::ConstIterator::operator*(void) const
 {
-	assert(IsValid());
+	assert(IsValid());				// 不正なイテレータでないことを確認する
 	return m_pCurrentNode->Data;
 }
 
 const ScoreData* LinkedList::ConstIterator::operator->(void) const
 {
-	assert(IsValid());
+	assert(IsValid());				// 不正なイテレータでないことを確認する
 	return &m_pCurrentNode->Data;
 }
 
@@ -117,13 +117,13 @@ LinkedList::ConstIterator::operator bool(void) const
 
 ScoreData& LinkedList::Iterator::operator* (void)
 {
-	assert(IsValid());
+	assert(IsValid());				// 不正なイテレータでないことを確認する
 	return m_pCurrentNode->Data;
 }
 
 ScoreData* LinkedList::Iterator::operator->(void)
 {
-	assert(IsValid());
+	assert(IsValid());				// 不正なイテレータでないことを確認する
 	return &m_pCurrentNode->Data;
 }
 
@@ -225,16 +225,13 @@ bool LinkedList::Insert(ConstIterator& Itr, const ScoreData& Data)
 
 bool LinkedList::Pushback(const ScoreData& Data)
 {
-	Iterator Itr;
-	Itr.m_pCurrentNode = m_pDummy;
-	Itr.m_pList        = this;
+	auto Itr = GetEnd();
 	return Insert(Itr, Data);
 }
 
 bool LinkedList::Pushfront(const ScoreData& Data)
 {
 	auto Itr = GetBegin();
-	++Itr;
 	return Insert(Itr, Data);
 }
 

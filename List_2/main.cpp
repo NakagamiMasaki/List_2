@@ -40,7 +40,7 @@ int main(void)
 	while (std::getline(File, szLoadedText))
 	{
 		std::string Score;	// スコア
-		std::string Name;		// 名前
+		std::string Name;	// 名前
 
 		// タブでスコアとユーザー名を区切る
 		auto TabPos = szLoadedText.find('\t');		// タブがある位置
@@ -61,6 +61,7 @@ int main(void)
 	}
 
 	// 待機
+	std::cout <<  std::endl;
 	std::cout << "終了するにはエンターキーを押してください。" << std::endl;
 	rewind(stdin);
 	getchar();

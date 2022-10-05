@@ -9,6 +9,10 @@
 #include "../List_2/LinkedList.h"
 #include "ManualTest_List.h"
 
+/**
+* @namespace	ex01_LinkedList
+* @brief		双方向リストのテスト
+*/
 namespace ex01_ManualTest
 {
 

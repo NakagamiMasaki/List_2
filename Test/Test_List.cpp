@@ -1,6 +1,6 @@
 /**
 * @file		Test_List.cpp
-* @brief	双方向リストテスト
+* @brief	双方向リストのテスト
 * @data		2022/10/04
 */
 
@@ -9,6 +9,10 @@
 #include "../List_2/LinkedList.h"
 #include "TestHelper.h"
 
+/**
+* @namespace	ex01_LinkedList
+* @brief		双方向リストのテスト
+*/
 namespace ex01_LinkedList
 {
 
