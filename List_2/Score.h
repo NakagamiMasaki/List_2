@@ -1,0 +1,21 @@
+/**
+* @file		Score.h
+* @brief	成績データ定義
+* @data		2022/10/04
+*/
+
+#pragma once
+
+//===== インクルード =====
+#include <string>
+
+//===== 構造体定義 =====
+/**
+* @struct	ScoreData
+* @brief	成績データ
+*/
+struct ScoreData
+{
+	int			Score;	// スコア
+	std::string	Name;	// ユーザー名
+};

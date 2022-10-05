@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="..\List_2\LinkedList.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_List.cpp">
+      <Filter>AutoTest</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Iterator.cpp">
+      <Filter>AutoTest</Filter>
+    </ClCompile>
+    <ClCompile Include="ManualTest_List.cpp">
+      <Filter>ManualTest</Filter>
+    </ClCompile>
+    <ClCompile Include="ManualTest_Iterator.cpp">
+      <Filter>ManualTest</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="TestHelper.h" />
+    <ClInclude Include="ManualTest_List.h">
+      <Filter>ManualTest</Filter>
+    </ClInclude>
+    <ClInclude Include="ManualTest_Iterator.h">
+      <Filter>ManualTest</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ソースファイル">
+      <UniqueIdentifier>{7d7e380e-4fff-4107-afa8-e9a75ff08fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AutoTest">
+      <UniqueIdentifier>{326b7f6b-aa76-486b-b5e2-1d9a2dc7a000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ManualTest">
+      <UniqueIdentifier>{83b85790-eece-41c4-a684-d0b279455126}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
