@@ -9,21 +9,21 @@
 //===== マクロ定義 =====
 /**
 * @define	CAN_NOT_ASSIGN_TO_CONSTITERATOR_ELEMENT
-* @brief	コンストなイテレータを通してデータの代入ができないことの確認する
-*			コンパイルに失敗したら成功
+* @brief	コンストなイテレータを通してデータの代入ができないことの確認です。
+*			コンパイルに失敗したら成功です。
 */
 //#define CAN_NOT_ASSIGN_TO_CONSTITERATOR_ELEMENT
 
 /**
 * @define	CAN_NOT_COPY_FROM_CONST_ITERATOR
-* @brief	コンストなイテレータからコピーして非コンストなイテレータをコピー作成できないことを確認する
-*			コンパイルに失敗したら成功
+* @brief	コンストなイテレータからコピーして非コンストなイテレータをコピー作成できないことの確認です。
+*			コンパイルに失敗したら成功です。
 */
 //#define CAN_NOT_COPY_FROM_CONST_ITERATOR
 
 /**
 * @define	CAN_NOT_ASSIGN_CONST_ITERATOR_TO_ITERATOR
-* @brief	非コンストなイテレータにコンストイテレータを代入できないことを確認する
-*			コンパイルに失敗したら成功
+* @brief	非コンストなイテレータにコンストイテレータを代入できないことを確認です。
+*			コンパイルに失敗したら成功です。
 */
 //#define CAN_NOT_ASSIGN_CONST_ITERATOR_TO_ITERATOR
