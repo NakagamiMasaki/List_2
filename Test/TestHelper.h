@@ -4,6 +4,7 @@
 #include "gtest/gtest.h"
 #include "../List_2/LinkedList.h"
 
+//===== クラス定義 =====
 /**
 * @class	LinkedListTestFixture
 * @brief	複数要素が既に入っているリストの準備を簡略化するためのフィクスチャ
