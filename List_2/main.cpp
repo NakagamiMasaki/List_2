@@ -61,7 +61,7 @@ int main(void)
 	}
 
 	// 待機
-	std::cout <<  std::endl;
+	std::cout << std::endl;
 	std::cout << "終了するにはエンターキーを押してください。" << std::endl;
 	rewind(stdin);
 	getchar();

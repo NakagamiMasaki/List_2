@@ -95,7 +95,7 @@ bool LinkedList::ConstIterator::operator!=(const ConstIterator& Itr) const
 
 bool LinkedList::ConstIterator::IsValidReference(void) const
 {
-	return m_pList != nullptr;
+	return m_pList != nullptr && m_pCurrentNode != nullptr;
 }
 
 bool LinkedList::ConstIterator::IsDummy(void) const
@@ -142,6 +142,9 @@ LinkedList::LinkedList(void)
 LinkedList::~LinkedList(void)
 {
 	Clear();
+
+	// ダミーノードを解放する
+	delete m_pDummy;
 }
 
 size_t LinkedList::GetSize(void) const
@@ -274,9 +277,6 @@ void LinkedList::Clear(void)
 		auto Itr = GetBegin();
 		Delete(Itr);
 	}
-
-	// ダミーノードを解放する
-	delete m_pDummy;
 }
 
 LinkedList::ConstIterator LinkedList::GetConstBegin(void) const
