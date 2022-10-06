@@ -187,9 +187,6 @@ public:
 	*/
 	LinkedList(void);
 
-	LinkedList(const LinkedList&) = delete;
-	LinkedList(LinkedList&&) = delete;
-
 	/**
 	* @fn		LinkedList::~LinkedList(void)
 	* @brief	デストラクタ
