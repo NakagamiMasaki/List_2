@@ -27,8 +27,12 @@ namespace ex02_Iterator
 */
 TEST(GetIteratorData, InvalidReference)
 {
+#ifdef _DEBUG
 	LinkedList::Iterator Itr;
 	EXPECT_DEATH(Itr->Name == "Dummy", "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -40,8 +44,12 @@ TEST(GetIteratorData, InvalidReference)
 */
 TEST(GetConstIteratorData, InvalidReference)
 {
+#ifdef _DEBUG
 	LinkedList::ConstIterator Itr;
 	EXPECT_DEATH(Itr->Name == "Dummy", "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -81,12 +89,16 @@ TEST(GetIteratorData, AfterAssignment)
 */
 TEST(GetIteratorData, EmptyListBeginIterator)
 {
+#ifdef _DEBUG
 	// 空のリストを用意する
 	LinkedList List;
 
 	// イテレータを取得して確認する
 	auto Itr = List.GetBegin();
 	EXPECT_DEATH(Itr->Name == "Dummy", "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -98,12 +110,16 @@ TEST(GetIteratorData, EmptyListBeginIterator)
 */
 TEST(GetConstIteratorData, EmptyListBeginIterator)
 {
+#ifdef _DEBUG
 	// 空のリストを用意する
 	LinkedList List;
 
 	// イテレータを取得して確認する
 	auto Itr = List.GetConstBegin();
 	EXPECT_DEATH(Itr->Name == "Dummy", "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -115,12 +131,16 @@ TEST(GetConstIteratorData, EmptyListBeginIterator)
 */
 TEST(GetIteratorData, EndIterator)
 {
+#ifdef _DEBUG
 	// 空のリストを用意する
 	LinkedList List;
 
 	// イテレータを取得して確認する
 	auto Itr = List.GetEnd();
 	EXPECT_DEATH(Itr->Name == "Dummy", "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -132,12 +152,16 @@ TEST(GetIteratorData, EndIterator)
 */
 TEST(GetConstIteratorData, EndIterator)
 {
+#ifdef _DEBUG
 	// 空のリストを用意する
 	LinkedList List;
 
 	// イテレータを取得して確認する
 	auto Itr = List.GetConstEnd();
 	EXPECT_DEATH(Itr->Name == "Dummy", "");
+#else
+	SUCCEED();
+#endif
 }
 
 #pragma endregion
@@ -153,8 +177,12 @@ TEST(GetConstIteratorData, EndIterator)
 */
 TEST(IteratorIncrement, InvalidReference)
 {
+#ifdef _DEBUG
 	LinkedList::Iterator Itr;
 	EXPECT_DEATH(++Itr , "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -166,8 +194,12 @@ TEST(IteratorIncrement, InvalidReference)
 */
 TEST(ConstIteratorIncrement, InvalidReference)
 {
+#ifdef _DEBUG
 	LinkedList::ConstIterator Itr;
 	EXPECT_DEATH(++Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -179,9 +211,13 @@ TEST(ConstIteratorIncrement, InvalidReference)
 */
 TEST(IteratorIncrement, EmptyListBeginIterator)
 {
+#ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetBegin();
 	EXPECT_DEATH(++Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -193,9 +229,13 @@ TEST(IteratorIncrement, EmptyListBeginIterator)
 */
 TEST(ConstIteratorIncrement, EmptyListBeginIterator)
 {
+#ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetConstBegin();
 	EXPECT_DEATH(++Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -207,9 +247,13 @@ TEST(ConstIteratorIncrement, EmptyListBeginIterator)
 */
 TEST(IteratorIncrement, EndIterator)
 {
+#ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetEnd();
 	EXPECT_DEATH(++Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -221,9 +265,13 @@ TEST(IteratorIncrement, EndIterator)
 */
 TEST(ConstIteratorIncrement, EndIterator)
 {
+#ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetConstEnd();
 	EXPECT_DEATH(++Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -359,8 +407,12 @@ TEST_F(LinkedListTestFixture, ConstIteratorPostfixIncrement)
 */
 TEST(IteratorDecrement, InvalidReference)
 {
+#ifdef _DEBUG
 	LinkedList::Iterator Itr;
 	EXPECT_DEATH(--Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -372,8 +424,12 @@ TEST(IteratorDecrement, InvalidReference)
 */
 TEST(ConstIteratorDecrement, InvalidReference)
 {
+#ifdef _DEBUG
 	LinkedList::ConstIterator Itr;
 	EXPECT_DEATH(--Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -385,9 +441,13 @@ TEST(ConstIteratorDecrement, InvalidReference)
 */
 TEST(IteratorDecrement, EmptyListBeginIterator)
 {
+#ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetBegin();
 	EXPECT_DEATH(--Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -399,9 +459,13 @@ TEST(IteratorDecrement, EmptyListBeginIterator)
 */
 TEST(ConstIteratorDecrement, EmptyListBeginIterator)
 {
+#ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetConstBegin();
 	EXPECT_DEATH(--Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -413,9 +477,13 @@ TEST(ConstIteratorDecrement, EmptyListBeginIterator)
 */
 TEST(IteratorDecrement, EndIterator)
 {
+#ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetEnd();
 	EXPECT_DEATH(--Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -427,9 +495,13 @@ TEST(IteratorDecrement, EndIterator)
 */
 TEST(ConstIteratorDecrement, EndIterator)
 {
+#ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetConstEnd();
 	EXPECT_DEATH(--Itr, "");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -835,6 +907,5 @@ TEST_F(LinkedListTestFixture, DiffrentConstIteratorCompareNE)
 }
 
 #pragma endregion
-
 
 }	// ex02_Iterator
