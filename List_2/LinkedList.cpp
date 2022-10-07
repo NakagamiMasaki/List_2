@@ -94,14 +94,14 @@ bool LinkedList::ConstIterator::IsValidReference(void) const
 	return m_pList != nullptr && m_pCurrentNode != nullptr;
 }
 
-bool LinkedList::ConstIterator::IsDummy(void) const
-{
-	return m_pCurrentNode && m_pCurrentNode->Data.Name == "DummyNode";
-}
-
 bool LinkedList::ConstIterator::IsValid(void) const
 {
 	return IsValidReference() && !IsDummy();
+}
+
+bool LinkedList::ConstIterator::IsDummy(void) const
+{
+	return m_pCurrentNode && m_pCurrentNode->Data.Name == "DummyNode";
 }
 
 //====== LinkedList::Iterator =====
