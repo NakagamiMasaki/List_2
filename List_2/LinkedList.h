@@ -127,15 +127,8 @@ public:
 
 		/**
 		* @fn		ConstIterator::IsInvalidReference(void) const
-		* @brief	このイテレータがダミーノードを指しているかチェックする。
-		* @details	本来は必要ないと思いますが、内部の実装上外部からダミーノードを指しているか確認する方法がないため実装しています。
-		* @return	ダミーノードを指していれば true | 指していなければ false
-		*/
-		bool IsDummy(void) const;
-
-		/**
-		* @fn		ConstIterator::IsInvalidReference(void) const
 		* @brief	不正なイテレータでないことをチェックする。
+		* @details	trueが返った場合、このイテレータを介してデータにアクセスできることを保証する。
 		* @return	不正でないなら true | 不正なイテレータなら false
 		*/
 		bool IsValid(void) const;
@@ -146,6 +139,15 @@ public:
 		* @return	不正でないなら true | 不正なイテレータなら false
 		*/
 		operator bool(void) const;
+
+	protected:
+		/**
+		* @fn		ConstIterator::IsDummy(void) const
+		* @brief	このイテレータがダミーノードを指しているかチェックする。
+		* @details	本来は必要ないと思いますが、内部の実装上外部からダミーノードを指しているか確認する方法がないため実装しています。
+		* @return	ダミーノードを指していれば true | 指していなければ false
+		*/
+		bool IsDummy(void) const;
 
 		friend LinkedList;
 	};

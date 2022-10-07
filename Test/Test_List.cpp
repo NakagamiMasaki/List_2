@@ -607,6 +607,9 @@ TEST_F(LinkedListTestFixture, DeleteInvalidIterator)
 *			先頭イテレータの取得のテストです。
 *			リストが空の時に、先頭イテレータを取得した時の挙動をチェックします。
 *			ダミーノードを指すイテレータを取得できれば成功です。
+*			ダミーノードを指すイテレータを介してデータにアクセスすると
+*			Assertが発生し、stderrに This Iterator Is End を含む文字列が
+*			出力されるので、EXPECT_DEATH()を利用してテストします。
 */
 TEST(GetBeginIterator, WhenEmpty)
 {
@@ -616,7 +619,8 @@ TEST(GetBeginIterator, WhenEmpty)
 	auto Itr = List.GetBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(Itr.IsDummy());
+	//EXPECT_TRUE(Itr.IsDummy());
+	EXPECT_DEATH(Itr->Name == "", ".*This Iterator Is End.*");
 }
 
 /**
@@ -823,6 +827,9 @@ TEST_F(LinkedListTestFixture, GetBeginIteratorWhenDeleteCenter)
 *			先頭コンストイテレータの取得のテストです。
 *			リストが空の時に、先頭コンストイテレータを取得した時の挙動をチェックします。
 *			ダミーノードを指すイテレータを取得できれば成功です。
+*			ダミーノードを指すイテレータを介してデータにアクセスすると
+*			Assertが発生し、stderrに This Iterator Is End を含む文字列が
+*			出力されるので、EXPECT_DEATH()を利用してテストします。
 */
 TEST(GetBeginConstIterator, WhenEmpty)
 {
@@ -832,7 +839,8 @@ TEST(GetBeginConstIterator, WhenEmpty)
 	auto Itr = List.GetConstBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(Itr.IsDummy());
+	//EXPECT_TRUE(Itr.IsDummy());
+	EXPECT_DEATH(Itr->Name == "", ".*This Iterator Is End.*");
 }
 
 /**
@@ -1039,6 +1047,9 @@ TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenDeleteCenter)
 *			末尾イテレータの取得のテストです。
 *			リストが空の時に、末尾イテレータを取得した時の挙動をチェックします。
 *			ダミーノードを指すイテレータを取得できれば成功です。
+*			ダミーノードを指すイテレータを介してデータにアクセスすると
+*			Assertが発生し、stderrに This Iterator Is End を含む文字列が
+*			出力されるので、EXPECT_DEATH()を利用してテストします。
 */
 TEST(GetEndIterator, WhenEmpty)
 {
@@ -1048,7 +1059,8 @@ TEST(GetEndIterator, WhenEmpty)
 	auto Itr = List.GetEnd();
 
 	// 挙動チェック
-	EXPECT_TRUE(Itr.IsDummy());
+	//EXPECT_TRUE(Itr.IsDummy());
+	EXPECT_DEATH(Itr->Name == "", ".*This Iterator Is End.*");
 }
 
 /**
@@ -1263,6 +1275,9 @@ TEST_F(LinkedListTestFixture, GetEndIteratorWhenDeleteCenter)
 *			末尾コンストイテレータの取得の取得のテストです。
 *			リストが空の時に、末尾コンストイテレータの取得を取得した時の挙動をチェックします。
 *			ダミーノードを指すイテレータを取得できれば成功です。
+*			ダミーノードを指すイテレータを介してデータにアクセスすると
+*			Assertが発生し、stderrに This Iterator Is End を含む文字列が
+*			出力されるので、EXPECT_DEATH()を利用してテストします。
 */
 TEST(GetEndConstIterator, WhenEmpty)
 {
@@ -1272,7 +1287,8 @@ TEST(GetEndConstIterator, WhenEmpty)
 	auto Itr = List.GetConstEnd();
 
 	// 挙動チェック
-	EXPECT_TRUE(Itr.IsDummy());
+	//EXPECT_TRUE(Itr.IsDummy());
+	EXPECT_DEATH(Itr->Name == "", ".*This Iterator Is End.*");
 }
 
 /**
