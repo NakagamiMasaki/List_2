@@ -27,15 +27,18 @@ protected:
 		//*** データを3件末尾に挿入する
 		Data.Score = 0;
 		Data.Name = "Test0";
-		pList->Pushback(Data);
+		auto Itr = pList->GetEnd();
+		pList->Insert(Itr, Data);
 
 		Data.Score = 1;
 		Data.Name = "Test1";
-		pList->Pushback(Data);
+		Itr = pList->GetEnd();
+		pList->Insert(Itr, Data);
 
 		Data.Score = 2;
 		Data.Name = "Test2";
-		pList->Pushback(Data);
+		Itr = pList->GetEnd();
+		pList->Insert(Itr, Data);
 	}
 
 	virtual void TearDown(void)
@@ -61,8 +64,9 @@ inline void TestListItem(LinkedList& List, ScoreData* pData, size_t DataCount)
 	for (decltype(DataCount) i = 0; i < DataCount; ++i)
 	{
 		// 正しいかチェック
-		EXPECT_EQ(pData[i].Score, Itr->Score);
-		EXPECT_EQ(pData[i].Name, Itr->Name);
+		auto& Data = *Itr;
+		EXPECT_EQ(pData[i].Score, Data.Score);
+		EXPECT_EQ(pData[i].Name, Data.Name);
 
 		++Itr;
 	}

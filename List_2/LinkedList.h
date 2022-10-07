@@ -86,12 +86,6 @@ public:
 		const ScoreData& operator*(void) const;
 
 		/**
-		* @fn		ConstIterator::operator*(void) const
-		* @brief	イテレータが指す要素を取得する(コンスト版)
-		*/
-		const ScoreData* operator->(void) const;
-
-		/**
 		* @fn		ConstIterator::ConstIterator(const ConstIterator& ConstItr)
 		* @brief	イテレータのコピーを行う(コピーコンストラクタ)
 		*/
@@ -129,22 +123,15 @@ public:
 		* @fn		ConstIterator::IsInvalidReference(void) const
 		* @brief	不正なイテレータでないことをチェックする。
 		* @details	trueが返った場合、このイテレータを介してデータにアクセスできることを保証する。
+		*			(リストからこのイテレータが指している要素が削除されていない限り)
 		* @return	不正でないなら true | 不正なイテレータなら false
 		*/
 		bool IsValid(void) const;
-
-		/**
-		* @fn		ConstIterator::operator bool(void) const
-		* @brief	不正なイテレータでないことをチェックする。
-		* @return	不正でないなら true | 不正なイテレータなら false
-		*/
-		operator bool(void) const;
 
 	protected:
 		/**
 		* @fn		ConstIterator::IsDummy(void) const
 		* @brief	このイテレータがダミーノードを指しているかチェックする。
-		* @details	本来は必要ないと思いますが、内部の実装上外部からダミーノードを指しているか確認する方法がないため実装しています。
 		* @return	ダミーノードを指していれば true | 指していなければ false
 		*/
 		bool IsDummy(void) const;
@@ -166,12 +153,6 @@ public:
 		* @brief	イテレータが指す要素を取得する(非コンスト版)
 		*/
 		ScoreData& operator*(void);
-
-		/**
-		* @fn		Iterator::operator->(void)
-		* @brief	イテレータが指す要素を取得する(非コンスト版)
-		*/
-		ScoreData* operator->(void);
 	};
 
 	//=== メンバ変数
@@ -209,22 +190,6 @@ public:
 	* @return		成功時 : true | 失敗時 : false
 	*/
 	bool Insert(ConstIterator& Itr, const ScoreData& Data);
-
-	/**
-	* @fn			LinkedList::Pushback(const ScoreData&)
-	* @brief		データを末尾に追加
-	* @param[in]	Data	新しく追加したいデータ
-	* @return		成功時 : true | 失敗時 : false
-	*/
-	bool Pushback(const ScoreData& Data);
-
-	/**
-	* @fn			LinkedList::Pushfront(const ScoreData&)
-	* @brief		データを先頭に追加
-	* @param[in]	Data	新しく追加したいデータ
-	* @return		成功時 : true | 失敗時 : false
-	*/
-	bool Pushfront(const ScoreData& Data);
 
 	/**
 	* @fn			LinkedList::Delete(ConstIterator&)

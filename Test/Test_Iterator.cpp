@@ -29,7 +29,9 @@ TEST(GetIteratorData, InvalidReference)
 {
 #ifdef _DEBUG
 	LinkedList::Iterator Itr;
-	EXPECT_DEATH(Itr->Name == "Dummy", "");
+	EXPECT_DEATH({
+		auto& Data = *Itr;
+		}, ".*Invalid Reference.*");
 #else
 	SUCCEED();
 #endif
@@ -46,7 +48,9 @@ TEST(GetConstIteratorData, InvalidReference)
 {
 #ifdef _DEBUG
 	LinkedList::ConstIterator Itr;
-	EXPECT_DEATH(Itr->Name == "Dummy", "");
+	EXPECT_DEATH({
+		auto & Data = *Itr;
+		}, ".*Invalid Reference.*");
 #else
 	SUCCEED();
 #endif
@@ -66,7 +70,8 @@ TEST(GetIteratorData, AfterAssignment)
 	ScoreData Data;
 	Data.Score = 0;
 	Data.Name = "Test0";
-	List.Pushback(Data);
+	auto EndItr = List.GetEnd();
+	List.Insert(EndItr, Data);
 
 	// 値を代入する
 	auto Itr = List.GetBegin();
@@ -76,8 +81,9 @@ TEST(GetIteratorData, AfterAssignment)
 
 	// イテレータを取得しなおして確認する
 	Itr = List.GetBegin();
-	EXPECT_EQ(1, Itr->Score);
-	EXPECT_EQ("Test1", Itr->Name);
+	auto& TestData = *Itr;
+	EXPECT_EQ(1, TestData.Score);
+	EXPECT_EQ("Test1", TestData.Name);
 }
 
 /**
@@ -95,7 +101,9 @@ TEST(GetIteratorData, EmptyListBeginIterator)
 
 	// イテレータを取得して確認する
 	auto Itr = List.GetBegin();
-	EXPECT_DEATH(Itr->Name == "Dummy", "");
+	EXPECT_DEATH({
+		auto& Data = *Itr;
+		}, ".*Reference To DummyNode.*");
 #else
 	SUCCEED();
 #endif
@@ -116,7 +124,9 @@ TEST(GetConstIteratorData, EmptyListBeginIterator)
 
 	// イテレータを取得して確認する
 	auto Itr = List.GetConstBegin();
-	EXPECT_DEATH(Itr->Name == "Dummy", "");
+	EXPECT_DEATH({
+	auto & Data = *Itr;
+		}, ".*Reference To DummyNode.*");
 #else
 	SUCCEED();
 #endif
@@ -137,7 +147,9 @@ TEST(GetIteratorData, EndIterator)
 
 	// イテレータを取得して確認する
 	auto Itr = List.GetEnd();
-	EXPECT_DEATH(Itr->Name == "Dummy", "");
+	EXPECT_DEATH({
+		auto& Data = *Itr;
+		}, ".*Reference To DummyNode.*");
 #else
 	SUCCEED();
 #endif
@@ -158,7 +170,9 @@ TEST(GetConstIteratorData, EndIterator)
 
 	// イテレータを取得して確認する
 	auto Itr = List.GetConstEnd();
-	EXPECT_DEATH(Itr->Name == "Dummy", "");
+	EXPECT_DEATH({
+	auto & Data = *Itr;
+		}, ".*Reference To DummyNode.*");
 #else
 	SUCCEED();
 #endif
@@ -179,7 +193,7 @@ TEST(IteratorIncrement, InvalidReference)
 {
 #ifdef _DEBUG
 	LinkedList::Iterator Itr;
-	EXPECT_DEATH(++Itr , "");
+	EXPECT_DEATH(++Itr , ".*Invalid Reference.*");
 #else
 	SUCCEED();
 #endif
@@ -196,7 +210,7 @@ TEST(ConstIteratorIncrement, InvalidReference)
 {
 #ifdef _DEBUG
 	LinkedList::ConstIterator Itr;
-	EXPECT_DEATH(++Itr, "");
+	EXPECT_DEATH(++Itr, ".*Invalid Reference.*");
 #else
 	SUCCEED();
 #endif
@@ -214,7 +228,7 @@ TEST(IteratorIncrement, EmptyListBeginIterator)
 #ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetBegin();
-	EXPECT_DEATH(++Itr, "");
+	EXPECT_DEATH(++Itr, ".*This Iterator Is End.*");	// 要素数が0なら末尾イテレータが返るのを利用する
 #else
 	SUCCEED();
 #endif
@@ -232,7 +246,7 @@ TEST(ConstIteratorIncrement, EmptyListBeginIterator)
 #ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetConstBegin();
-	EXPECT_DEATH(++Itr, "");
+	EXPECT_DEATH(++Itr, ".*This Iterator Is End.*");	// 要素数が0なら末尾イテレータが返るのを利用する
 #else
 	SUCCEED();
 #endif
@@ -250,7 +264,7 @@ TEST(IteratorIncrement, EndIterator)
 #ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetEnd();
-	EXPECT_DEATH(++Itr, "");
+	EXPECT_DEATH(++Itr, ".*This Iterator Is End.*");
 #else
 	SUCCEED();
 #endif
@@ -268,7 +282,7 @@ TEST(ConstIteratorIncrement, EndIterator)
 #ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetConstEnd();
-	EXPECT_DEATH(++Itr, "");
+	EXPECT_DEATH(++Itr, ".*This Iterator Is End.*");
 #else
 	SUCCEED();
 #endif
@@ -294,9 +308,11 @@ TEST_F(LinkedListTestFixture, IteratorIncrementBeginToEnd)
 	auto Itr = pList->GetBegin();
 	for (int i = 0; i < 3; ++i)
 	{
+		auto& Data = *Itr;
+
 		// 正しいかチェック
-		EXPECT_EQ(TestData[i].Score, Itr->Score);
-		EXPECT_EQ(TestData[i].Name, Itr->Name);
+		EXPECT_EQ(TestData[i].Score, Data.Score);
+		EXPECT_EQ(TestData[i].Name, Data.Name);
 
 		++Itr;
 	}
@@ -322,9 +338,11 @@ TEST_F(LinkedListTestFixture, ConstIteratorIncrementBeginToEnd)
 	auto Itr = pList->GetConstBegin();
 	for (int i = 0; i < 3; ++i)
 	{
+		auto& Data = *Itr;
+
 		// 正しいかチェック
-		EXPECT_EQ(TestData[i].Score, Itr->Score);
-		EXPECT_EQ(TestData[i].Name, Itr->Name);
+		EXPECT_EQ(TestData[i].Score, Data.Score);
+		EXPECT_EQ(TestData[i].Name, Data.Name);
 
 		++Itr;
 	}
@@ -342,8 +360,8 @@ TEST_F(LinkedListTestFixture, IteratorPrefixIncrement)
 	// 先頭イテレータ
 	auto Itr = pList->GetBegin();
 
-	EXPECT_EQ(1, (++Itr)->Score);	// 前置インクリメントなので戻り値は変更後のはず
-	EXPECT_EQ(1, Itr->Score);		// 次を指しているかチェック
+	EXPECT_EQ(1, (*(++Itr)).Score);	// 前置インクリメントなので戻り値は変更後のはず
+	EXPECT_EQ(1, (*Itr).Score);		// 次を指しているかチェック
 }
 
 /**
@@ -358,8 +376,8 @@ TEST_F(LinkedListTestFixture, ConstIteratorPrefixIncrement)
 	// 先頭イテレータ
 	auto Itr = pList->GetConstBegin();
 
-	EXPECT_EQ(1, (++Itr)->Score);	// 前置インクリメントなので戻り値は変更後のはず
-	EXPECT_EQ(1, Itr->Score);		// 次を指しているかチェック
+	EXPECT_EQ(1, (*(++Itr)).Score);	// 前置インクリメントなので戻り値は変更後のはず
+	EXPECT_EQ(1, (*Itr).Score);		// 次を指しているかチェック
 }
 
 /**
@@ -374,8 +392,8 @@ TEST_F(LinkedListTestFixture, IteratorPostfixIncrement)
 	// 先頭イテレータ
 	auto Itr = pList->GetBegin();
 
-	EXPECT_EQ(0, (Itr++)->Score);	// 後置インクリメントなので戻り値は変更前のはず
-	EXPECT_EQ(1, Itr->Score);		// 次を指しているかチェック
+	EXPECT_EQ(0, (*(Itr++)).Score);	// 後置インクリメントなので戻り値は変更前のはず
+	EXPECT_EQ(1, (*Itr).Score);		// 次を指しているかチェック
 }
 
 /**
@@ -390,8 +408,8 @@ TEST_F(LinkedListTestFixture, ConstIteratorPostfixIncrement)
 	// 先頭イテレータ
 	auto Itr = pList->GetConstBegin();
 
-	EXPECT_EQ(0, (Itr++)->Score);	// 前置インクリメントなので戻り値は変更前のはず
-	EXPECT_EQ(1, Itr->Score);		// 次を指しているかチェック
+	EXPECT_EQ(0, (*(Itr++)).Score);	// 後置インクリメントなので戻り値は変更前のはず
+	EXPECT_EQ(1, (*Itr).Score);		// 次を指しているかチェック
 }
 
 #pragma endregion
@@ -409,7 +427,7 @@ TEST(IteratorDecrement, InvalidReference)
 {
 #ifdef _DEBUG
 	LinkedList::Iterator Itr;
-	EXPECT_DEATH(--Itr, "");
+	EXPECT_DEATH(--Itr, ".*Invalid Reference.*");
 #else
 	SUCCEED();
 #endif
@@ -426,7 +444,7 @@ TEST(ConstIteratorDecrement, InvalidReference)
 {
 #ifdef _DEBUG
 	LinkedList::ConstIterator Itr;
-	EXPECT_DEATH(--Itr, "");
+	EXPECT_DEATH(--Itr, ".*Invalid Reference.*");
 #else
 	SUCCEED();
 #endif
@@ -444,7 +462,7 @@ TEST(IteratorDecrement, EmptyListBeginIterator)
 #ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetBegin();
-	EXPECT_DEATH(--Itr, "");
+	EXPECT_DEATH(--Itr, ".*This Iterator Is Begin.*");
 #else
 	SUCCEED();
 #endif
@@ -462,7 +480,7 @@ TEST(ConstIteratorDecrement, EmptyListBeginIterator)
 #ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetConstBegin();
-	EXPECT_DEATH(--Itr, "");
+	EXPECT_DEATH(--Itr, ".*This Iterator Is Begin.*");
 #else
 	SUCCEED();
 #endif
@@ -480,7 +498,7 @@ TEST(IteratorDecrement, EndIterator)
 #ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetEnd();
-	EXPECT_DEATH(--Itr, "");
+	EXPECT_DEATH(--Itr, ".*This Iterator Is Begin.*");	// 要素数が0なので、事実上 先頭イテレータ == 末尾イテレータになる
 #else
 	SUCCEED();
 #endif
@@ -498,7 +516,7 @@ TEST(ConstIteratorDecrement, EndIterator)
 #ifdef _DEBUG
 	LinkedList List;
 	auto Itr = List.GetConstEnd();
-	EXPECT_DEATH(--Itr, "");
+	EXPECT_DEATH(--Itr, ".*This Iterator Is Begin.*");	// 要素数が0なので、事実上 先頭イテレータ == 末尾イテレータになる
 #else
 	SUCCEED();
 #endif
@@ -525,8 +543,12 @@ TEST_F(LinkedListTestFixture, IteratorDecrementEndToBegin)
 	for (int i = 0; i < 3; ++i)
 	{
 		--Itr;
-		EXPECT_EQ(TestData[i].Score, Itr->Score);
-		EXPECT_EQ(TestData[i].Name, Itr->Name);
+
+		auto& Data = *Itr;
+
+		// 正しいかチェック
+		EXPECT_EQ(TestData[i].Score, Data.Score);
+		EXPECT_EQ(TestData[i].Name, Data.Name);
 	}
 }
 
@@ -551,8 +573,10 @@ TEST_F(LinkedListTestFixture, ConstIteratorDecrementEndToBegin)
 	for (int i = 0; i < 3; ++i)
 	{
 		--Itr;
-		EXPECT_EQ(TestData[i].Score, Itr->Score);
-		EXPECT_EQ(TestData[i].Name, Itr->Name);
+
+		auto& Data = *Itr;
+		EXPECT_EQ(TestData[i].Score,Data.Score);
+		EXPECT_EQ(TestData[i].Name, Data.Name);
 	}
 }
 
@@ -568,8 +592,8 @@ TEST_F(LinkedListTestFixture, IteratorPrefixDecrement)
 	// 先頭イテレータ
 	auto Itr = pList->GetEnd();
 
-	EXPECT_EQ(2, (--Itr)->Score);	// 前置デクリメントなので戻り値は変更後のはず
-	EXPECT_EQ(2, Itr->Score);		// 前を指しているかチェック
+	EXPECT_EQ(2, (*(--Itr)).Score);	// 前置デクリメントなので戻り値は変更後のはず
+	EXPECT_EQ(2, (*Itr).Score);		// 前を指しているかチェック
 }
 
 /**
@@ -584,8 +608,8 @@ TEST_F(LinkedListTestFixture, ConstIteratorPrefixDecrement)
 	// 先頭イテレータ
 	auto Itr = pList->GetConstEnd();
 
-	EXPECT_EQ(2, (--Itr)->Score);	// 前置デクリメントなので戻り値は変更後のはず
-	EXPECT_EQ(2, Itr->Score);		// 前を指しているかチェック
+	EXPECT_EQ(2, (*(--Itr)).Score);	// 前置デクリメントなので戻り値は変更後のはず
+	EXPECT_EQ(2, (*Itr).Score);		// 前を指しているかチェック
 }
 
 /**
@@ -602,8 +626,8 @@ TEST_F(LinkedListTestFixture, IteratorPostfixDecrement)
 
 	--Itr;	// ここでデクリメントしておかないとダミーノードにアクセスしてしまう
 
-	EXPECT_EQ(2, (Itr--)->Score);	// 後置デクリメントなので戻り値は変更前のはず
-	EXPECT_EQ(1, Itr->Score);		// 前を指しているかチェック
+	EXPECT_EQ(2, (*(Itr--)).Score);	// 後置デクリメントなので戻り値は変更前のはず
+	EXPECT_EQ(1, (*Itr).Score);		// 前を指しているかチェック
 }
 
 /**
@@ -620,8 +644,8 @@ TEST_F(LinkedListTestFixture, ConstIteratorPostfixDecrement)
 
 	--Itr;	// ここでデクリメントしておかないとダミーノードにアクセスしてしまう
 
-	EXPECT_EQ(2, (Itr--)->Score);	// 前置インクリメントなので戻り値は変更前のはず
-	EXPECT_EQ(1, Itr->Score);		// 前を指しているかチェック
+	EXPECT_EQ(2, (*(Itr--)).Score);	// 後置インクリメントなので戻り値は変更前のはず
+	EXPECT_EQ(1, (*Itr).Score);		// 前を指しているかチェック
 }
 
 #pragma endregion

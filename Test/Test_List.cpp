@@ -225,8 +225,9 @@ TEST_F(LinkedListTestFixture, WhenSomeDataExistToBegin)
 	//*** 以前の先頭要素が2番目にあることを確認する
 	Itr = pList->GetBegin();
 	++Itr;
-	EXPECT_TRUE(Itr->Score == 0);
-	EXPECT_TRUE(Itr->Name == "Test0");
+	auto& TestData = *Itr;
+	EXPECT_EQ(0 ,TestData.Score);
+	EXPECT_EQ("Test0", TestData.Name);
 }
 
 /**
@@ -248,8 +249,9 @@ TEST_F(LinkedListTestFixture, WhenSomeDataExistToEnd)
 	//*** 末尾の1つ前に追加されているか確認する
 	Itr = pList->GetEnd();
 	--Itr;
-	EXPECT_TRUE(Itr->Score == 11);
-	EXPECT_TRUE(Itr->Name == "Test11");
+	auto& TestData = *Itr;
+	EXPECT_EQ(11, TestData.Score);
+	EXPECT_EQ("Test11", TestData.Name);
 }
 
 /**
@@ -263,18 +265,23 @@ TEST_F(LinkedListTestFixture, WhenSomeDataExistToCenter)
 {
 	//*** 先頭の次のイテレータを指定してデータを新しく挿入する
 	auto Itr = pList->GetBegin();
-	ScoreData Data;
-	Data.Score = 12;
-	Data.Name = "Test12";
-	++Itr;
-	EXPECT_TRUE(pList->Insert(Itr, Data));
+	{
+		ScoreData Data;
+		Data.Score = 12;
+		Data.Name = "Test12";
+		++Itr;
+		EXPECT_TRUE(pList->Insert(Itr, Data));
+	}
 
 	//*** 先頭から2進んだ位置に元のデータがあればOK
-	Itr = pList->GetBegin();
-	++Itr;
-	++Itr;
-	EXPECT_TRUE(Itr->Score == 1);
-	EXPECT_TRUE(Itr->Name == "Test1");
+	{
+		Itr = pList->GetBegin();
+		++Itr;
+		++Itr;
+		auto& Data = *Itr;
+		EXPECT_EQ(1, Data.Score);
+		EXPECT_EQ("Test1", Data.Name);
+	}
 
 	//*** 格納済みのデータに影響がないかチェック
 	// 前から順番に
@@ -311,17 +318,22 @@ TEST_F(LinkedListTestFixture, WhenSomeDataExistToCenter)
 TEST_F(LinkedListTestFixture, InsertWithConstIteratorToBegin)
 {
 	//*** 先頭を示すコンストなイテレータを使ってデータを挿入する。
-	auto ConstItr = pList->GetConstBegin();
-	ScoreData Data;
-	Data.Score = 13;
-	Data.Name = "Test13";
-	EXPECT_TRUE(pList->Insert(ConstItr, Data));
+	{
+		auto ConstItr = pList->GetConstBegin();
+		ScoreData Data;
+		Data.Score = 13;
+		Data.Name = "Test13";
+		EXPECT_TRUE(pList->Insert(ConstItr, Data));
+	}
 
 	//*** もともと先頭にあったデータが2番目に来ているかチェック
-	auto Itr = pList->GetBegin();
-	++Itr;
-	EXPECT_TRUE(Itr->Score == 0);
-	EXPECT_TRUE(Itr->Name == "Test0");
+	{
+		auto Itr = pList->GetBegin();
+		++Itr;
+		auto& Data = *Itr;
+		EXPECT_EQ(0, Data.Score);
+		EXPECT_EQ("Test0", Data.Name);
+	}
 
 	//*** 格納済みのデータに影響がないかチェック
 	// 前から順番に
@@ -358,17 +370,22 @@ TEST_F(LinkedListTestFixture, InsertWithConstIteratorToBegin)
 TEST_F(LinkedListTestFixture, InsertWithConstIteratorToEnd)
 {
 	//*** 末尾を示すコンストなイテレータを使ってデータを挿入する。
-	auto ConstItr = pList->GetConstEnd();
-	ScoreData Data;
-	Data.Score = 13;
-	Data.Name = "Test13";
-	EXPECT_TRUE(pList->Insert(ConstItr, Data));
+	{
+		auto ConstItr = pList->GetConstEnd();
+		ScoreData Data;
+		Data.Score = 13;
+		Data.Name = "Test13";
+		EXPECT_TRUE(pList->Insert(ConstItr, Data));
+	}
 
 	//*** 期待される位置に挿入されているかチェック
-	auto Itr = pList->GetEnd();
-	--Itr;
-	EXPECT_TRUE(Itr->Score == 13);
-	EXPECT_TRUE(Itr->Name == "Test13");
+	{
+		auto Itr = pList->GetEnd();
+		--Itr;
+		auto& Data = *Itr;
+		EXPECT_EQ(13, Data.Score);
+		EXPECT_EQ("Test13", Data.Name);
+	}
 
 	//*** 格納済みのデータに影響がないかチェック
 	// 前から順番に
@@ -405,19 +422,24 @@ TEST_F(LinkedListTestFixture, InsertWithConstIteratorToEnd)
 TEST_F(LinkedListTestFixture, InsertWithConstIteratorToCenter)
 {
 	//*** 先頭の次を示すコンストなイテレータを使ってデータを挿入する。
-	auto ConstItr = pList->GetConstBegin();
-	ScoreData Data;
-	Data.Score = 13;
-	Data.Name = "Test13";
-	++ConstItr;
-	EXPECT_TRUE(pList->Insert(ConstItr, Data));
+	{
+		auto ConstItr = pList->GetConstBegin();
+		ScoreData Data;
+		Data.Score = 13;
+		Data.Name = "Test13";
+		++ConstItr;
+		EXPECT_TRUE(pList->Insert(ConstItr, Data));
+	}
 
 	//*** 先頭の2つ次にずれているかチェック
-	auto Itr = pList->GetBegin();
-	++Itr;
-	++Itr;
-	EXPECT_TRUE(Itr->Score == 1);
-	EXPECT_TRUE(Itr->Name == "Test1");
+	{
+		auto Itr = pList->GetBegin();
+		++Itr;
+		++Itr;
+		auto& Data = *Itr;
+		EXPECT_EQ(1, Data.Score);
+		EXPECT_EQ("Test1", Data.Name);
+	}
 
 	//*** 格納済みのデータに影響がないかチェック
 	// 前から順番に
@@ -608,19 +630,24 @@ TEST_F(LinkedListTestFixture, DeleteInvalidIterator)
 *			リストが空の時に、先頭イテレータを取得した時の挙動をチェックします。
 *			ダミーノードを指すイテレータを取得できれば成功です。
 *			ダミーノードを指すイテレータを介してデータにアクセスすると
-*			Assertが発生し、stderrに This Iterator Is End を含む文字列が
+*			Assertが発生し、stderrに Reference To DummyNode を含む文字列が
 *			出力されるので、EXPECT_DEATH()を利用してテストします。
 */
 TEST(GetBeginIterator, WhenEmpty)
 {
+#if _DEBUG
 	LinkedList List;
 
 	// 先頭イテレータ取得
 	auto Itr = List.GetBegin();
 
 	// 挙動チェック
-	//EXPECT_TRUE(Itr.IsDummy());
-	EXPECT_DEATH(Itr->Name == "", ".*This Iterator Is End.*");
+	EXPECT_DEATH({
+		auto& Data = *Itr;
+		}, ".*Reference To DummyNode.*");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -645,8 +672,9 @@ TEST(GetBeginIterator, When1ItemExist)
 	auto BeginItr = List.GetBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 24);
-	EXPECT_TRUE(BeginItr->Name == "Test24");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(24, TestData.Score);
+	EXPECT_EQ("Test24", TestData.Name);
 }
 
 /**
@@ -675,8 +703,9 @@ TEST(GetBeginIterator, When2ItemExist)
 	auto BeginItr = List.GetBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 0);
-	EXPECT_TRUE(BeginItr->Name == "Test0");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(0, TestData.Score);
+	EXPECT_EQ("Test0", TestData.Name);
 }
 
 /**
@@ -699,8 +728,9 @@ TEST_F(LinkedListTestFixture, GetBeginIteratorWhenInsertBegin)
 	auto BeginItr = pList->GetBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 26);
-	EXPECT_TRUE(BeginItr->Name == "Test26");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(26, TestData.Score);
+	EXPECT_EQ("Test26", TestData.Name);
 }
 
 /**
@@ -723,8 +753,9 @@ TEST_F(LinkedListTestFixture, GetBeginIteratorWhenInsertEnd)
 	auto BeginItr = pList->GetBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 0);
-	EXPECT_TRUE(BeginItr->Name == "Test0");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(0, TestData.Score);
+	EXPECT_EQ("Test0", TestData.Name);
 }
 
 /**
@@ -748,8 +779,9 @@ TEST_F(LinkedListTestFixture, GetBeginIteratorWhenInsertCenter)
 	auto BeginItr = pList->GetBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 0);
-	EXPECT_TRUE(BeginItr->Name == "Test0");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(0, TestData.Score);
+	EXPECT_EQ("Test0", TestData.Name);
 }
 
 /**
@@ -769,8 +801,9 @@ TEST_F(LinkedListTestFixture, GetBeginIteratorWhenDeleteBegin)
 	auto BeginItr = pList->GetBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 1);
-	EXPECT_TRUE(BeginItr->Name == "Test1");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(1, TestData.Score);
+	EXPECT_EQ("Test1", TestData.Name);
 }
 
 /**
@@ -791,8 +824,9 @@ TEST_F(LinkedListTestFixture, GetBeginIteratorWhenDeleteEnd)
 	auto BeginItr = pList->GetBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 0);
-	EXPECT_TRUE(BeginItr->Name == "Test0");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(0, TestData.Score);
+	EXPECT_EQ("Test0", TestData.Name);
 }
 
 /**
@@ -813,8 +847,9 @@ TEST_F(LinkedListTestFixture, GetBeginIteratorWhenDeleteCenter)
 	auto BeginItr = pList->GetBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 0);
-	EXPECT_TRUE(BeginItr->Name == "Test0");
+	auto& Data = *BeginItr;
+	EXPECT_EQ(0, Data.Score);
+	EXPECT_EQ("Test0", Data.Name);
 }
 
 #pragma endregion
@@ -828,19 +863,24 @@ TEST_F(LinkedListTestFixture, GetBeginIteratorWhenDeleteCenter)
 *			リストが空の時に、先頭コンストイテレータを取得した時の挙動をチェックします。
 *			ダミーノードを指すイテレータを取得できれば成功です。
 *			ダミーノードを指すイテレータを介してデータにアクセスすると
-*			Assertが発生し、stderrに This Iterator Is End を含む文字列が
+*			Assertが発生し、stderrに Reference To DummyNode を含む文字列が
 *			出力されるので、EXPECT_DEATH()を利用してテストします。
 */
 TEST(GetBeginConstIterator, WhenEmpty)
 {
+#ifdef _DEBUG
 	LinkedList List;
 
 	// 先頭コンストイテレータ取得
 	auto Itr = List.GetConstBegin();
 
 	// 挙動チェック
-	//EXPECT_TRUE(Itr.IsDummy());
-	EXPECT_DEATH(Itr->Name == "", ".*This Iterator Is End.*");
+	EXPECT_DEATH({
+		auto& Data = *Itr;
+		}, ".*Reference To DummyNode.*");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -865,8 +905,9 @@ TEST(GetBeginConstIterator, When1ItemExist)
 	auto BeginItr = List.GetConstBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 30);
-	EXPECT_TRUE(BeginItr->Name == "Test30");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(30, TestData.Score);
+	EXPECT_EQ("Test30", TestData.Name);
 }
 
 /**
@@ -895,8 +936,9 @@ TEST(GetBeginConstIterator, When2ItemExist)
 	auto BeginItr = List.GetConstBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 0);
-	EXPECT_TRUE(BeginItr->Name == "Test0");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(0, TestData.Score);
+	EXPECT_EQ("Test0", TestData.Name);
 }
 
 /**
@@ -919,8 +961,9 @@ TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenInsertBegin)
 	auto BeginItr = pList->GetConstBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 32);
-	EXPECT_TRUE(BeginItr->Name == "Test32");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(32, TestData.Score);
+	EXPECT_EQ("Test32", TestData.Name);
 }
 
 /**
@@ -943,8 +986,9 @@ TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenInsertEnd)
 	auto BeginItr = pList->GetConstBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 0);
-	EXPECT_TRUE(BeginItr->Name == "Test0");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(0, TestData.Score);
+	EXPECT_EQ("Test0", TestData.Name);
 }
 
 /**
@@ -968,8 +1012,9 @@ TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenInsertCenter)
 	auto BeginItr = pList->GetConstBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 0);
-	EXPECT_TRUE(BeginItr->Name == "Test0");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(0, TestData.Score);
+	EXPECT_EQ("Test0", TestData.Name);
 }
 
 /**
@@ -989,8 +1034,9 @@ TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenDeleteBegin)
 	auto BeginItr = pList->GetConstBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 1);
-	EXPECT_TRUE(BeginItr->Name == "Test1");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(1, TestData.Score);
+	EXPECT_EQ("Test1", TestData.Name);
 }
 
 /**
@@ -1011,8 +1057,9 @@ TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenDeleteEnd)
 	auto BeginItr = pList->GetConstBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 0);
-	EXPECT_TRUE(BeginItr->Name == "Test0");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(0, TestData.Score);
+	EXPECT_EQ("Test0", TestData.Name);
 }
 
 /**
@@ -1033,8 +1080,9 @@ TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenDeleteCenter)
 	auto BeginItr = pList->GetConstBegin();
 
 	// 挙動チェック
-	EXPECT_TRUE(BeginItr->Score == 0);
-	EXPECT_TRUE(BeginItr->Name == "Test0");
+	auto& TestData = *BeginItr;
+	EXPECT_EQ(0, TestData.Score);
+	EXPECT_EQ("Test0", TestData.Name);
 }
 
 #pragma endregion
@@ -1048,19 +1096,24 @@ TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenDeleteCenter)
 *			リストが空の時に、末尾イテレータを取得した時の挙動をチェックします。
 *			ダミーノードを指すイテレータを取得できれば成功です。
 *			ダミーノードを指すイテレータを介してデータにアクセスすると
-*			Assertが発生し、stderrに This Iterator Is End を含む文字列が
+*			Assertが発生し、stderrに Reference To DummyNode を含む文字列が
 *			出力されるので、EXPECT_DEATH()を利用してテストします。
 */
 TEST(GetEndIterator, WhenEmpty)
 {
+#ifdef _DEBUG
 	LinkedList List;
 
 	// 末尾イテレータ取得
 	auto Itr = List.GetEnd();
 
 	// 挙動チェック
-	//EXPECT_TRUE(Itr.IsDummy());
-	EXPECT_DEATH(Itr->Name == "", ".*This Iterator Is End.*");
+	EXPECT_DEATH({
+		auto & Data = *Itr;
+		}, ".*Reference To DummyNode.*");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
@@ -1086,8 +1139,9 @@ TEST(GetEndIterator, When1ItemExist)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 24);
-	EXPECT_TRUE(EndItr->Name == "Test24");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(24, TestData.Score);
+	EXPECT_EQ("Test24", TestData.Name);
 }
 
 /**
@@ -1117,8 +1171,9 @@ TEST(GetEndIterator, When2ItemExist)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 1);
-	EXPECT_TRUE(EndItr->Name == "Test1");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(1, TestData.Score);
+	EXPECT_EQ("Test1", TestData.Name);
 }
 
 /**
@@ -1142,8 +1197,9 @@ TEST_F(LinkedListTestFixture, GetEndIteratorWhenInsertBegin)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 2);
-	EXPECT_TRUE(EndItr->Name == "Test2");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(2, TestData.Score);
+	EXPECT_EQ("Test2", TestData.Name);
 }
 
 /**
@@ -1167,8 +1223,9 @@ TEST_F(LinkedListTestFixture, GetEndIteratorWhenInsertEnd)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 38);
-	EXPECT_TRUE(EndItr->Name == "Test38");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(38, TestData.Score);
+	EXPECT_EQ("Test38", TestData.Name);
 }
 
 /**
@@ -1193,8 +1250,9 @@ TEST_F(LinkedListTestFixture, GetEndIteratorWhenInsertCenter)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 2);
-	EXPECT_TRUE(EndItr->Name == "Test2");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(2, TestData.Score);
+	EXPECT_EQ("Test2", TestData.Name);
 }
 
 /**
@@ -1215,8 +1273,9 @@ TEST_F(LinkedListTestFixture, GetEndIteratorWhenDeleteBegin)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 2);
-	EXPECT_TRUE(EndItr->Name == "Test2");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(2, TestData.Score);
+	EXPECT_EQ("Test2", TestData.Name);
 }
 
 /**
@@ -1238,8 +1297,9 @@ TEST_F(LinkedListTestFixture, GetEndIteratorWhenDeleteEnd)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 1);
-	EXPECT_TRUE(EndItr->Name == "Test1");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(1, TestData.Score);
+	EXPECT_EQ("Test1", TestData.Name);
 }
 
 /**
@@ -1261,8 +1321,9 @@ TEST_F(LinkedListTestFixture, GetEndIteratorWhenDeleteCenter)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 2);
-	EXPECT_TRUE(EndItr->Name == "Test2");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(2, TestData.Score);
+	EXPECT_EQ("Test2", TestData.Name);
 }
 
 #pragma endregion
@@ -1276,26 +1337,31 @@ TEST_F(LinkedListTestFixture, GetEndIteratorWhenDeleteCenter)
 *			リストが空の時に、末尾コンストイテレータの取得を取得した時の挙動をチェックします。
 *			ダミーノードを指すイテレータを取得できれば成功です。
 *			ダミーノードを指すイテレータを介してデータにアクセスすると
-*			Assertが発生し、stderrに This Iterator Is End を含む文字列が
+*			Assertが発生し、stderrに Reference To DummyNode を含む文字列が
 *			出力されるので、EXPECT_DEATH()を利用してテストします。
 */
 TEST(GetEndConstIterator, WhenEmpty)
 {
+#ifdef _DEBUG
 	LinkedList List;
 
 	// 末尾コンストイテレータの取得取得
 	auto Itr = List.GetConstEnd();
 
 	// 挙動チェック
-	//EXPECT_TRUE(Itr.IsDummy());
-	EXPECT_DEATH(Itr->Name == "", ".*This Iterator Is End.*");
+	EXPECT_DEATH({
+		auto& Data = *Itr;
+		}, ".*Reference To DummyNode.*");
+#else
+	SUCCEED();
+#endif
 }
 
 /**
 * @brief	リストに要素が一つある場合に、呼び出した際の挙動
 * @details	ID:42
 *			末尾コンストイテレータの取得の取得のテストです。
-*			リストに1つの要素があるとき、末尾コンストイテレータの取得を取得した時の挙動をチェックします。
+*			リストに1つの要素があるとき、末尾コンストイテレータを取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
 TEST(GetEndConstIterator, When1ItemExist)
@@ -1309,13 +1375,14 @@ TEST(GetEndConstIterator, When1ItemExist)
 	auto Itr = List.GetBegin();
 	ASSERT_TRUE(List.Insert(Itr, Data));
 
-	// 末尾コンストイテレータの取得を取得
+	// 末尾コンストイテレータの取得
 	auto EndItr = List.GetConstEnd();
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 42);
-	EXPECT_TRUE(EndItr->Name == "Test42");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(42, TestData.Score);
+	EXPECT_EQ("Test42", TestData.Name);
 }
 
 /**
@@ -1345,8 +1412,9 @@ TEST(GetEndConstIterator, When2ItemExist)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 1);
-	EXPECT_TRUE(EndItr->Name == "Test1");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(1, TestData.Score);
+	EXPECT_EQ("Test1", TestData.Name);
 }
 
 /**
@@ -1370,8 +1438,9 @@ TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenInsertBegin)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 2);
-	EXPECT_TRUE(EndItr->Name == "Test2");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(2, TestData.Score);
+	EXPECT_EQ("Test2", TestData.Name);
 }
 
 /**
@@ -1395,8 +1464,9 @@ TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenInsertEnd)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 44);
-	EXPECT_TRUE(EndItr->Name == "Test44");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(44, TestData.Score);
+	EXPECT_EQ("Test44", TestData.Name);
 }
 
 /**
@@ -1421,8 +1491,9 @@ TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenInsertCenter)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 2);
-	EXPECT_TRUE(EndItr->Name == "Test2");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(2, TestData.Score);
+	EXPECT_EQ("Test2", TestData.Name);
 }
 
 /**
@@ -1443,8 +1514,9 @@ TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenDeleteBegin)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 2);
-	EXPECT_TRUE(EndItr->Name == "Test2");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(2, TestData.Score);
+	EXPECT_EQ("Test2", TestData.Name);
 }
 
 /**
@@ -1466,8 +1538,9 @@ TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenDeleteEnd)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 1);
-	EXPECT_TRUE(EndItr->Name == "Test1");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(1, TestData.Score);
+	EXPECT_EQ("Test1", TestData.Name);
 }
 
 /**
@@ -1489,8 +1562,9 @@ TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenDeleteCenter)
 	--EndItr;
 
 	// 挙動チェック
-	EXPECT_TRUE(EndItr->Score == 2);
-	EXPECT_TRUE(EndItr->Name == "Test2");
+	auto& TestData = *EndItr;
+	EXPECT_EQ(2, TestData.Score);
+	EXPECT_EQ("Test2", TestData.Name);
 }
 
 #pragma endregion

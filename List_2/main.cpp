@@ -51,13 +51,15 @@ int main(void)
 		ScoreData Data;
 		Data.Score = std::stoi(Score);
 		Data.Name = Name;
-		List.Pushback(Data);
+		auto Itr = List.GetBegin();
+		List.Insert(Itr, Data);
 	}
 
 	//*** 中身を全て表示
 	for (auto Itr = List.GetConstBegin(); Itr != List.GetConstEnd(); ++Itr)
 	{
-		std::cout << Itr->Score << "\t" << Itr->Name << std::endl;
+		auto& Data = *Itr;
+		std::cout << Data.Score << "\t" << Data.Name << std::endl;
 	}
 
 	// 待機

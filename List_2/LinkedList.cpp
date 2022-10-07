@@ -21,7 +21,7 @@ LinkedList::ConstIterator::ConstIterator(void)
 LinkedList::ConstIterator& LinkedList::ConstIterator::operator--(void)
 {
 	// リストの先頭方向に1つ進む
-	assert(m_pCurrentNode && m_pList && "InvalidReference");								// リストを参照しているか？
+	assert(IsValidReference() && "Invalid Reference");										// リストを参照しているか？
 	assert(m_pCurrentNode->pPrev->Data.Name != "DummyNode" && "This Iterator Is Begin");	// 先頭ノードを既に指しているのに、さらに前に進もうとしていないか？
 	m_pCurrentNode = m_pCurrentNode->pPrev;
 	return *this;
@@ -30,8 +30,8 @@ LinkedList::ConstIterator& LinkedList::ConstIterator::operator--(void)
 LinkedList::ConstIterator& LinkedList::ConstIterator::operator++(void)
 {
 	// リストの末尾方向に1つ進む
-	assert(m_pCurrentNode && m_pList && "InvalidReference");						// リストを参照しているか？
-	assert(m_pCurrentNode->Data.Name != "DummyNode" && "This Iterator Is End");		// ダミーノードを指しているのに、さらに進もうとしていないか？
+	assert(IsValidReference() && "Invalid Reference");						// リストを参照しているか？
+	assert(!IsDummy() && "This Iterator Is End, Reference To DummyNode");	// ダミーノードを指しているのに、さらに進もうとしていないか？
 	m_pCurrentNode = m_pCurrentNode->pNext;
 	return *this;
 }
@@ -39,7 +39,7 @@ LinkedList::ConstIterator& LinkedList::ConstIterator::operator++(void)
 LinkedList::ConstIterator LinkedList::ConstIterator::operator--(int)
 {
 	// リストの先頭方向に1つ進む
-	assert(m_pCurrentNode && m_pList && "InvalidReference");								// リストを参照しているか？
+	assert(IsValidReference() && "Invalid Reference");										// リストを参照しているか？
 	assert(m_pCurrentNode->pPrev->Data.Name != "DummyNode" && "This Iterator Is Begin");	// 先頭ノードを既に指しているのに、さらに前に進もうとしていないか？
 	LinkedList::ConstIterator TempItr = *this;	// コピーする
 	m_pCurrentNode = m_pCurrentNode->pPrev;
@@ -50,8 +50,8 @@ LinkedList::ConstIterator LinkedList::ConstIterator::operator--(int)
 LinkedList::ConstIterator LinkedList::ConstIterator::operator++(int)
 {
 	// リストの末尾方向に1つ進む
-	assert(m_pCurrentNode && m_pList && "InvalidReference");						// リストを参照しているか？
-	assert(m_pCurrentNode->Data.Name != "DummyNode" && "This Iterator Is End");		// ダミーノードを指しているのに、さらに進もうとしていないか？
+	assert(IsValidReference() && "Invalid Reference");						// リストを参照しているか？
+	assert(!IsDummy() && "This Iterator Is End, Reference To DummyNode");	// ダミーノードを指しているのに、さらに進もうとしていないか？
 	LinkedList::ConstIterator TempItr = *this;	// コピーする
 	m_pCurrentNode = m_pCurrentNode->pNext;
 
@@ -61,17 +61,9 @@ LinkedList::ConstIterator LinkedList::ConstIterator::operator++(int)
 const ScoreData& LinkedList::ConstIterator::operator*(void) const
 {
 	// 不正なイテレータでないことを確認する
-	assert(m_pList && m_pCurrentNode && "Invalid Reference");						// 適切な参照を持つか？
-	assert(m_pCurrentNode->Data.Name != "DummyNode" && "This Iterator Is End");		// ダミーノードを指していないか？
+	assert(IsValidReference() && "Invalid Reference");						// 適切な参照を持つか？
+	assert(!IsDummy() && "This Iterator Is End, Reference To DummyNode");	// ダミーノードを指していないか？
 	return m_pCurrentNode->Data;
-}
-
-const ScoreData* LinkedList::ConstIterator::operator->(void) const
-{
-	// 不正なイテレータでないことを確認する
-	assert(m_pList && m_pCurrentNode && "Invalid Reference");						// 適切な参照を持つか？
-	assert(m_pCurrentNode->Data.Name != "DummyNode" && "This Iterator Is End");		// ダミーノードを指していないか？
-	return &m_pCurrentNode->Data;
 }
 
 LinkedList::ConstIterator::ConstIterator(const ConstIterator& ConstItr)
@@ -112,27 +104,14 @@ bool LinkedList::ConstIterator::IsValid(void) const
 	return IsValidReference() && !IsDummy();
 }
 
-LinkedList::ConstIterator::operator bool(void) const
-{
-	return IsValid();
-}
-
 //====== LinkedList::Iterator =====
 
 ScoreData& LinkedList::Iterator::operator* (void)
 {
 	// 不正なイテレータでないことを確認する
-	assert(m_pList && m_pCurrentNode && "Invalid Reference");						// 適切な参照を持つか？
-	assert(m_pCurrentNode->Data.Name != "DummyNode" && "This Iterator Is End");		// ダミーノードを指していないか？
+	assert(IsValidReference() && "Invalid Reference");						// 適切な参照を持つか？
+	assert(!IsDummy() && "This Iterator Is End, Reference To DummyNode");	// ダミーノードを指していないか？
 	return m_pCurrentNode->Data;
-}
-
-ScoreData* LinkedList::Iterator::operator->(void)
-{
-	// 不正なイテレータでないことを確認する
-	assert(m_pList && m_pCurrentNode && "Invalid Reference");						// 適切な参照を持つか？
-	assert(m_pCurrentNode->Data.Name != "DummyNode" && "This Iterator Is End");		// ダミーノードを指していないか？
-	return &m_pCurrentNode->Data;
 }
 
 //===== LinkedList =====
@@ -189,18 +168,6 @@ bool LinkedList::Insert(ConstIterator& Itr, const ScoreData& Data)
 	++m_ElementCount;
 
 	return true;
-}
-
-bool LinkedList::Pushback(const ScoreData& Data)
-{
-	auto Itr = GetEnd();
-	return Insert(Itr, Data);
-}
-
-bool LinkedList::Pushfront(const ScoreData& Data)
-{
-	auto Itr = GetBegin();
-	return Insert(Itr, Data);
 }
 
 bool LinkedList::Delete(ConstIterator& Itr)
