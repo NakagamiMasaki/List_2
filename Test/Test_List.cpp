@@ -485,18 +485,30 @@ TEST(InsertData, WithInvalidIterator)
 * @brief	リストが空である場合に、削除を行った際の挙動
 * @details	ID:16
 *			データの削除のテストです。
-*			リストが空の時に、先頭イテレータを指定して削除した時の挙動をチェックします。
+*			リストが空の時に、先頭イテレータ、末尾イテレータを指定して削除した時の挙動をチェックします。
 *			falseであれば成功です。
 */
 TEST(DeleteData, WithEmptyListBegin)
 {
 	LinkedList List;
 
-	// 先頭イテレータ取得
-	auto Itr = List.GetBegin();
+	// 先頭イテレータ
+	{
+		// 先頭イテレータ取得
+		auto Itr = List.GetBegin();
 
-	// 挙動チェック
-	EXPECT_FALSE(List.Delete(Itr));
+		// 挙動チェック
+		EXPECT_FALSE(List.Delete(Itr));
+	}
+
+	// 末尾イテレータ
+	{
+		// 末尾イテレータ取得
+		auto Itr = List.GetEnd();
+
+		// 挙動チェック
+		EXPECT_FALSE(List.Delete(Itr));
+	}
 }
 
 /**
@@ -510,11 +522,7 @@ TEST(DeleteData, WithEmptyListEnd)
 {
 	LinkedList List;
 
-	// 末尾イテレータ取得
-	auto Itr = List.GetEnd();
 
-	// 挙動チェック
-	EXPECT_FALSE(List.Delete(Itr));
 }
 
 /**

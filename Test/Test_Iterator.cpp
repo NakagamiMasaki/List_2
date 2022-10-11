@@ -432,13 +432,13 @@ TEST_F(LinkedListTestFixture, IteratorDecrementEndToBegin)
 */
 TEST_F(LinkedListTestFixture, IteratorPrefixDecrement)
 {
-	// 非コンストな先頭イテレータ
+	// 非コンストな末尾イテレータ
 	auto Itr = pList->GetEnd();
 
 	EXPECT_EQ(2, (*(--Itr)).Score);	// 前置デクリメントなので戻り値は変更後のはず
 	EXPECT_EQ(2, (*Itr).Score);		// 前を指しているかチェック
 
-	// コンストな先頭イテレータ
+	// コンストな末尾イテレータ
 	auto ConstItr = pList->GetConstEnd();
 
 	EXPECT_EQ(2, (*(--ConstItr)).Score);	// 前置デクリメントなので戻り値は変更後のはず
@@ -456,7 +456,7 @@ TEST_F(LinkedListTestFixture, IteratorPostfixDecrement)
 {
 	// 非コンストイテレータ
 	{
-		// 先頭イテレータ
+		// 末尾イテレータ
 		auto Itr = pList->GetEnd();
 
 		--Itr;	// ここでデクリメントしておかないとダミーノードにアクセスしてしまう
@@ -467,7 +467,7 @@ TEST_F(LinkedListTestFixture, IteratorPostfixDecrement)
 
 	// コンストイテレータ
 	{
-		// 先頭イテレータ
+		// 末尾イテレータ
 		auto ConstItr = pList->GetConstEnd();
 
 		--ConstItr;	// ここでデクリメントしておかないとダミーノードにアクセスしてしまう
