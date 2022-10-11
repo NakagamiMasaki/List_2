@@ -16,6 +16,15 @@
 namespace ex01_LinkedList
 {
 
+//===== 型エイリアス =====
+
+using InserDataF = LinkedListTestFixture;
+using DeleteDataF = LinkedListTestFixture;
+using GetBeginIteratorF = LinkedListTestFixture;
+using GetBeginConstIteratorF = LinkedListTestFixture;
+using GetEndIteratorF = LinkedListTestFixture;
+using GetEndConstIteratorF = LinkedListTestFixture;
+
 #pragma region ***** データ数の取得 *****
 /**
 * @brief	リストが空である場合の戻り値
@@ -204,7 +213,7 @@ TEST(InsertData, WhenEmptyTo)
 *			リストに複数の要素がある状態で、先頭にデータの挿入を行ったときの挙動を確認します。
 *			trueであれば成功です。
 */
-TEST_F(LinkedListTestFixture, WhenSomeDataExistToBegin)
+TEST_F(InserDataF, WhenSomeDataExistToBegin)
 {
 	//*** 先頭のイテレータを指定してデータを新しく挿入する
 	auto Itr = pList->GetBegin();
@@ -228,7 +237,7 @@ TEST_F(LinkedListTestFixture, WhenSomeDataExistToBegin)
 *			リストに複数の要素がある状態で、末尾にデータの挿入を行ったときの挙動を確認します。
 *			trueであれば成功です。
 */
-TEST_F(LinkedListTestFixture, WhenSomeDataExistToEnd)
+TEST_F(InserDataF, WhenSomeDataExistToEnd)
 {
 	//*** 末尾のイテレータを指定してデータを新しく挿入する
 	auto Itr = pList->GetEnd();
@@ -252,7 +261,7 @@ TEST_F(LinkedListTestFixture, WhenSomeDataExistToEnd)
 *			リストに複数の要素がある状態で、先頭でも末尾でもない場所にデータの挿入を行ったときの挙動を確認します。
 *			戻り値がTrueで、他のデータに影響がなければ成功です。
 */
-TEST_F(LinkedListTestFixture, WhenSomeDataExistToCenter)
+TEST_F(InserDataF, WhenSomeDataExistToCenter)
 {
 	//*** 先頭の次のイテレータを指定してデータを新しく挿入する
 	auto Itr = pList->GetBegin();
@@ -306,7 +315,7 @@ TEST_F(LinkedListTestFixture, WhenSomeDataExistToCenter)
 *			リストに複数の要素がある状態で、コンストなイテレータを利用して先頭, 末尾, 先頭でも末尾でもない要素にデータの挿入を行ったときの挙動を確認します。
 *			trueであれば成功です。
 */
-TEST_F(LinkedListTestFixture, InsertWithConstIteratorToBegin)
+TEST_F(InserDataF, InsertWithConstIteratorToBegin)
 {
 	//*** 先頭を示すコンストなイテレータを使ってデータを挿入する。
 	{
@@ -512,27 +521,13 @@ TEST(DeleteData, WithEmptyListBegin)
 }
 
 /**
-* @brief	リストが空である場合に、削除を行った際の挙動
-* @details	ID:16
-*			データの削除のテストです。
-*			リストが空の時に、末尾イテレータを指定して削除した時の挙動をチェックします。
-*			falseであれば成功です。
-*/
-TEST(DeleteData, WithEmptyListEnd)
-{
-	LinkedList List;
-
-
-}
-
-/**
 * @brief	リストに複数の要素がある場合に、先頭イテレータを渡して、削除した際の挙動
 * @details	ID:17
 *			データの削除のテストです。
 *			複数の要素がある時に、先頭イテレータを指定して削除した時の挙動をチェックします。
 *			trueであれば成功です。
 */
-TEST_F(LinkedListTestFixture, DeleteWithBegin)
+TEST_F(DeleteDataF, WithBegin)
 {
 	// 先頭イテレータを指定して削除
 	auto Itr = pList->GetBegin();
@@ -546,7 +541,7 @@ TEST_F(LinkedListTestFixture, DeleteWithBegin)
 *			複数の要素がある時に、末尾イテレータを指定して削除した時の挙動をチェックします。
 *			falseであれば成功です。
 */
-TEST_F(LinkedListTestFixture, DeleteWithEnd)
+TEST_F(DeleteDataF, WithEnd)
 {
 	// 末尾イテレータを指定して削除
 	auto Itr = pList->GetEnd();
@@ -560,7 +555,7 @@ TEST_F(LinkedListTestFixture, DeleteWithEnd)
 *			複数の要素がある時に、先頭でも末尾でもないイテレータを指定して削除した時の挙動をチェックします。
 *			trueであれば成功です。
 */
-TEST_F(LinkedListTestFixture, DeleteAnywhere)
+TEST_F(DeleteDataF, Anywhere)
 {
 	// 先頭イテレータの次のイテレータを指定して削除
 	auto Itr = pList->GetBegin();
@@ -584,7 +579,7 @@ TEST_F(LinkedListTestFixture, DeleteAnywhere)
 *			コンストなイテレータを指定して削除した時の挙動をチェックします。
 *			trueであれば成功です。
 */
-TEST_F(LinkedListTestFixture, DeleteAnywhereWithConstIterator)
+TEST_F(DeleteDataF, AnywhereWithConstIterator)
 {
 	// 先頭イテレータの次のイテレータを指定して削除
 	auto Itr = pList->GetConstBegin();
@@ -608,7 +603,7 @@ TEST_F(LinkedListTestFixture, DeleteAnywhereWithConstIterator)
 *			不正なイテレータを指定して削除した時の挙動をチェックします。
 *			trueであれば成功です。
 */
-TEST_F(LinkedListTestFixture, DeleteInvalidIterator)
+TEST_F(DeleteDataF, InvalidIterator)
 {
 	// 不正なイテレータを指定して削除する
 	LinkedList::Iterator Itr;
@@ -638,9 +633,7 @@ TEST(GetBeginIterator, WhenEmpty)
 	auto Itr = List.GetBegin();
 
 	// 挙動チェック
-	EXPECT_DEATH({
-		auto& Data = *Itr;
-		}, ".*Reference To DummyNode.*");
+	EXPECT_DEATH(*Itr, ".*Reference To DummyNode.*");
 #else
 	SUCCEED();
 #endif
@@ -775,7 +768,7 @@ TEST(GetBeginIterator, WhenInsertBegin)
 *			リストに複数の要素があるとき、先頭要素, 末尾要素, 先頭でも末尾でもない要素を削除した後に先頭イテレータを取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
-TEST_F(LinkedListTestFixture, GetBeginIteratorWhenDeleteBegin)
+TEST_F(GetBeginIteratorF, WhenDelete)
 {
 	// 中央(先頭でも末尾でもない)要素を削除
 	// 先頭要素を削除
@@ -989,7 +982,7 @@ TEST(GetBeginConstIterator, WhenInsertBegin)
 *			リストに複数の要素があるとき、先頭要素, 末尾要素, 先頭でも末尾でもない要素を削除した後に先頭コンストイテレータを取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
-TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenDeleteBegin)
+TEST_F(GetBeginConstIteratorF, WhenDelete)
 {
 	// 中央(先頭でも末尾でもない)要素を削除
 	// 先頭要素を削除
@@ -1206,7 +1199,7 @@ TEST(GetEndIterator, WhenInsertBegin)
 *			リストに複数の要素があるとき、先頭要素, 末尾要素, 先頭でも末尾でもない要素を削除した後に末尾イテレータを取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
-TEST_F(LinkedListTestFixture, GetEndIteratorWhenDeleteBegin)
+TEST_F(GetEndIteratorF, WhenDelete)
 {
 	// 中央(先頭でも末尾でもない)要素を削除
 	// 先頭要素を削除
@@ -1361,7 +1354,7 @@ TEST(GetEndConstIterator, When2ItemExist)
 *			先頭, 末尾, 先頭でも末尾でもない位置に挿入した後に末尾コンストイテレータの取得を取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
-TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenInsertBegin)
+TEST(GetEndConstIterator, WhenInsert)
 {
 	// リスト
 	LinkedList List;
@@ -1428,7 +1421,7 @@ TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenInsertBegin)
 *			リストに複数の要素があるとき、先頭要素, 末尾要素, 先頭でも末尾でもない要素を削除した後に末尾コンストイテレータの取得を取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
-TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenDeleteBegin)
+TEST_F(GetEndConstIteratorF, WhenDelete)
 {
 	// 中央(先頭でも末尾でもない)要素を削除
 	// 先頭要素を削除

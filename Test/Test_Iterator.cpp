@@ -16,6 +16,16 @@
 namespace ex02_Iterator
 {
 
+//===== 型エイリアス =====
+
+using IteratorIncrementF = LinkedListTestFixture;
+using IteratorDecrementF = LinkedListTestFixture;
+using IteratorCopyConstractorF = LinkedListTestFixture;
+using IteratorCopyAssignmentF = LinkedListTestFixture;
+using IteratorCompareEQF = LinkedListTestFixture;
+using IteratorCompareNEF = LinkedListTestFixture;
+
+
 #pragma region ***** イテレータの指す要素を取得する *****
 
 /**
@@ -210,7 +220,7 @@ TEST(IteratorIncrement, EndIterator)
 *			先頭から末尾まで呼び出しを行い、期待される要素が入っているか確認します。
 *			期待される要素が入っていれば成功です。
 */
-TEST_F(LinkedListTestFixture, IteratorIncrementBeginToEnd)
+TEST_F(IteratorIncrementF, BeginToEnd)
 {
 	ScoreData TestData[3];
 	TestData[0].Score = 0;
@@ -254,7 +264,7 @@ TEST_F(LinkedListTestFixture, IteratorIncrementBeginToEnd)
 *			インクリメント時の値とインクリメント後の値を確認します。
 *			次の要素を指していたら成功です。
 */
-TEST_F(LinkedListTestFixture, IteratorPrefixIncrement)
+TEST_F(IteratorIncrementF, PrefixIncrement)
 {
 	// 非コンストイテレータ
 	{
@@ -282,7 +292,7 @@ TEST_F(LinkedListTestFixture, IteratorPrefixIncrement)
 *			インクリメント時の値とインクリメント後の値を確認します。
 *			次の要素を指していたら成功です。
 */
-TEST_F(LinkedListTestFixture, IteratorPostfixIncrement)
+TEST_F(IteratorIncrementF, PostfixIncrement)
 {
 	// 非コンストイテレータ
 	{
@@ -384,7 +394,7 @@ TEST(IteratorDecrement, EndIterator)
 *			先頭から末尾まで呼び出しを行い、期待される要素が入っているか確認します。
 *			期待される要素が入っていれば成功です。
 */
-TEST_F(LinkedListTestFixture, IteratorDecrementEndToBegin)
+TEST_F(IteratorDecrementF, EndToBegin)
 {
 	ScoreData TestData[3];
 	TestData[0].Score = 2;
@@ -430,7 +440,7 @@ TEST_F(LinkedListTestFixture, IteratorDecrementEndToBegin)
 *			デクリメント時の値とデクリメント後の値を確認します。
 *			前の要素を指していたら成功です。
 */
-TEST_F(LinkedListTestFixture, IteratorPrefixDecrement)
+TEST_F(IteratorDecrementF, PrefixDecrement)
 {
 	// 非コンストな末尾イテレータ
 	auto Itr = pList->GetEnd();
@@ -452,7 +462,7 @@ TEST_F(LinkedListTestFixture, IteratorPrefixDecrement)
 *			デクリメント時の値とデクリメント後の値を確認します。
 *			前の要素を指していたら成功です。
 */
-TEST_F(LinkedListTestFixture, IteratorPostfixDecrement)
+TEST_F(IteratorDecrementF, PostfixDecrement)
 {
 	// 非コンストイテレータ
 	{
@@ -487,7 +497,7 @@ TEST_F(LinkedListTestFixture, IteratorPostfixDecrement)
 *			コピーコンストラクタでコピーしたイテレータがコピー元と同一であることを確認するテストです。
 *			コピーして作成したイテレータとコピー元が同一であれば成功です。
 */
-TEST_F(LinkedListTestFixture, IteratorCopyConstractor)
+TEST_F(IteratorCopyConstractorF, CopyConstractor)
 {
 	// 非コンストイテレータ
 	{
@@ -522,7 +532,7 @@ TEST_F(LinkedListTestFixture, IteratorCopyConstractor)
 *			コピー代入ででコピーしたイテレータがコピー元と同一であることを確認するテストです。
 *			コピーして作成したイテレータとコピー元が同一であれば成功です。
 */
-TEST_F(LinkedListTestFixture, IteratorCopyAssignmentConstractor)
+TEST_F(IteratorCopyAssignmentF, CopyAssignment)
 {
 	// 非コンストイテレータ
 	{
@@ -589,7 +599,7 @@ TEST(IteratorCompareEQ, EmptyListBeginAndEnd)
 *			同一のイテレータどうしで比較した時の挙動をチェックします。
 *			trueが返れば成功です。
 */
-TEST_F(LinkedListTestFixture, IteratorCompareEQ)
+TEST_F(IteratorCompareEQF, SameIterator)
 {
 	// 非コンストイテレータ
 	{
@@ -616,7 +626,7 @@ TEST_F(LinkedListTestFixture, IteratorCompareEQ)
 *			異なるイテレータどうしで比較した時の挙動をチェックします。
 *			falseが返れば成功です。
 */
-TEST_F(LinkedListTestFixture, DiffrentIteratorCompareEQ)
+TEST_F(IteratorCompareEQF, DiffrentIterator)
 {
 	// 非コンストイテレータ
 	{
@@ -681,7 +691,7 @@ TEST(IteratorCompareNE, EmptyListBeginAndEnd)
 *			同一のイテレータどうしで比較した時の挙動をチェックします。
 *			falseが返れば成功です。
 */
-TEST_F(LinkedListTestFixture, IteratorCompareNE)
+TEST_F(IteratorCompareNEF, SameIterator)
 {
 	// 非コンストイテレータ
 	{
@@ -708,7 +718,7 @@ TEST_F(LinkedListTestFixture, IteratorCompareNE)
 *			異なるイテレータどうしで比較した時の挙動をチェックします。
 *			trueが返れば成功です。
 */
-TEST_F(LinkedListTestFixture, DiffrentIteratorCompareNE)
+TEST_F(IteratorCompareNEF, DiffrentIterator)
 {
 	// コンストイテレータ
 	{
