@@ -28,29 +28,14 @@ namespace ex02_Iterator
 TEST(GetIteratorData, InvalidReference)
 {
 #ifdef _DEBUG
-	LinkedList::Iterator Itr;
-	EXPECT_DEATH({
-		auto& Data = *Itr;
-		}, ".*Invalid Reference.*");
-#else
-	SUCCEED();
-#endif
-}
 
-/**
-* @brief	リストの参照がない状態で呼び出した際の挙動
-* @details	ID:0
-*			イテレータの指す要素を取得するテストです。
-*			リストの参照がないコンストなイテレータから要素を取り出そうとした時の挙動をチェックします。
-*			Assertが発生したら成功です。
-*/
-TEST(GetConstIteratorData, InvalidReference)
-{
-#ifdef _DEBUG
-	LinkedList::ConstIterator Itr;
-	EXPECT_DEATH({
-		auto & Data = *Itr;
-		}, ".*Invalid Reference.*");
+	// 非コンストイテレータ
+	LinkedList::Iterator Itr;
+	EXPECT_DEATH(*Itr, ".*Invalid Reference.*");
+
+	// コンストイテレータ
+	LinkedList::ConstIterator ConstItr;
+	EXPECT_DEATH(*ConstItr, ".*Invalid Reference.*");
 #else
 	SUCCEED();
 #endif
@@ -99,34 +84,14 @@ TEST(GetIteratorData, EmptyListBeginIterator)
 	// 空のリストを用意する
 	LinkedList List;
 
-	// イテレータを取得して確認する
+	// 非コンストイテレータを取得して確認する
 	auto Itr = List.GetBegin();
-	EXPECT_DEATH({
-		auto& Data = *Itr;
-		}, ".*Reference To DummyNode.*");
-#else
-	SUCCEED();
-#endif
-}
+	EXPECT_DEATH(*Itr, ".*Reference To DummyNode.*");
 
-/**
-* @brief	リストが空の際の、先頭イテレータに対して呼び出した際の挙動
-* @details	ID:3
-*			イテレータの指す要素を取得するテストです。
-*			リストが空の時、コンストな先頭イテレータから要素を取り出そうとしたときの挙動の確認をします。
-*			Assertが発生したら成功です。
-*/
-TEST(GetConstIteratorData, EmptyListBeginIterator)
-{
-#ifdef _DEBUG
-	// 空のリストを用意する
-	LinkedList List;
+	// コンストイテレータを取得して確認する
+	auto ConstItr = List.GetConstBegin();
+	EXPECT_DEATH(*ConstItr, ".*Reference To DummyNode.*");
 
-	// イテレータを取得して確認する
-	auto Itr = List.GetConstBegin();
-	EXPECT_DEATH({
-	auto & Data = *Itr;
-		}, ".*Reference To DummyNode.*");
 #else
 	SUCCEED();
 #endif
@@ -145,34 +110,13 @@ TEST(GetIteratorData, EndIterator)
 	// 空のリストを用意する
 	LinkedList List;
 
-	// イテレータを取得して確認する
+	// 非コンストイテレータを取得して確認する
 	auto Itr = List.GetEnd();
-	EXPECT_DEATH({
-		auto& Data = *Itr;
-		}, ".*Reference To DummyNode.*");
-#else
-	SUCCEED();
-#endif
-}
+	EXPECT_DEATH(*Itr, ".*Reference To DummyNode.*");
 
-/**
-* @brief	末尾イテレータに対して呼び出した際の挙動
-* @details	ID:4
-*			イテレータの指す要素を取得するテストです。
-*			リストが空の時、コンストな末尾イテレータから要素を取り出そうとしたときの挙動の確認をします。
-*			Assertが発生したら成功です。
-*/
-TEST(GetConstIteratorData, EndIterator)
-{
-#ifdef _DEBUG
-	// 空のリストを用意する
-	LinkedList List;
-
-	// イテレータを取得して確認する
-	auto Itr = List.GetConstEnd();
-	EXPECT_DEATH({
-	auto & Data = *Itr;
-		}, ".*Reference To DummyNode.*");
+	// コンストイテレータを取得して確認する
+	auto ConstItr = List.GetConstEnd();
+	EXPECT_DEATH(*ConstItr, ".*Reference To DummyNode.*");
 #else
 	SUCCEED();
 #endif
@@ -192,25 +136,15 @@ TEST(GetConstIteratorData, EndIterator)
 TEST(IteratorIncrement, InvalidReference)
 {
 #ifdef _DEBUG
+
+	// 非コンストイテレータ
 	LinkedList::Iterator Itr;
 	EXPECT_DEATH(++Itr , ".*Invalid Reference.*");
-#else
-	SUCCEED();
-#endif
-}
 
-/**
-* @brief	リストの参照がない状態で呼び出した際の挙動
-* @details	ID:5
-*			イテレータをリストの末尾に向かって一つ進めるテストです。
-*			リストの参照がないとき、コンストなイテレータを末尾に向かって進めたときの挙動をチェックします。
-*			Assertが発生したら成功です。
-*/
-TEST(ConstIteratorIncrement, InvalidReference)
-{
-#ifdef _DEBUG
-	LinkedList::ConstIterator Itr;
-	EXPECT_DEATH(++Itr, ".*Invalid Reference.*");
+	// コンストイテレータ
+	LinkedList::ConstIterator ConstItr;
+	EXPECT_DEATH(++ConstItr, ".*Invalid Reference.*");
+
 #else
 	SUCCEED();
 #endif
@@ -226,27 +160,18 @@ TEST(ConstIteratorIncrement, InvalidReference)
 TEST(IteratorIncrement, EmptyListBeginIterator)
 {
 #ifdef _DEBUG
+	
+	// 空のリストを用意する
 	LinkedList List;
+	
+	// 非コンストイテレータ
 	auto Itr = List.GetBegin();
 	EXPECT_DEATH(++Itr, ".*This Iterator Is End.*");	// 要素数が0なら末尾イテレータが返るのを利用する
-#else
-	SUCCEED();
-#endif
-}
 
-/**
-* @brief	リストが空の際の、先頭イテレータに対して呼び出した際の挙動
-* @details	ID:6
-*			イテレータをリストの末尾に向かって一つ進めるテストです。
-*			リストが空の時、コンストなイテレータを末尾に向かって進めたときの挙動をチェックします。
-*			Assertが発生したら成功です。
-*/
-TEST(ConstIteratorIncrement, EmptyListBeginIterator)
-{
-#ifdef _DEBUG
-	LinkedList List;
-	auto Itr = List.GetConstBegin();
-	EXPECT_DEATH(++Itr, ".*This Iterator Is End.*");	// 要素数が0なら末尾イテレータが返るのを利用する
+	// コンストイテレータ
+	auto ConstItr = List.GetConstBegin();
+	EXPECT_DEATH(++ConstItr, ".*This Iterator Is End.*");	// 要素数が0なら末尾イテレータが返るのを利用する
+
 #else
 	SUCCEED();
 #endif
@@ -262,27 +187,17 @@ TEST(ConstIteratorIncrement, EmptyListBeginIterator)
 TEST(IteratorIncrement, EndIterator)
 {
 #ifdef _DEBUG
+
+	// 空のリストを用意する
 	LinkedList List;
+
+	// 非コンストイテレータ
 	auto Itr = List.GetEnd();
 	EXPECT_DEATH(++Itr, ".*This Iterator Is End.*");
-#else
-	SUCCEED();
-#endif
-}
 
-/**
-* @brief	末尾イテレータに対して呼び出した際の挙動
-* @details	ID:7
-*			イテレータをリストの末尾に向かって一つ進めるテストです。
-*			コンストな末尾イテレータをコンストなイテレータを末尾に向かって進めたときの挙動をチェックします。
-*			Assertが発生したら成功です。
-*/
-TEST(ConstIteratorIncrement, EndIterator)
-{
-#ifdef _DEBUG
-	LinkedList List;
-	auto Itr = List.GetConstEnd();
-	EXPECT_DEATH(++Itr, ".*This Iterator Is End.*");
+	// コンストイテレータ
+	auto ConstItr = List.GetConstEnd();
+	EXPECT_DEATH(++ConstItr, ".*This Iterator Is End.*");
 #else
 	SUCCEED();
 #endif
@@ -305,6 +220,7 @@ TEST_F(LinkedListTestFixture, IteratorIncrementBeginToEnd)
 	TestData[2].Score = 2;
 	TestData[2].Name = "Test2";
 
+	// コンストイテレータ
 	auto Itr = pList->GetBegin();
 	for (int i = 0; i < 3; ++i)
 	{
@@ -316,35 +232,18 @@ TEST_F(LinkedListTestFixture, IteratorIncrementBeginToEnd)
 
 		++Itr;
 	}
-}
 
-/**
-* @brief	リストに二つ以上の要素がある場合に呼び出した際の挙動
-* @details	ID:8
-*			イテレータをリストの末尾に向かって一つ進めるテストです。
-*			コンストなイテレータで先頭から末尾まで呼び出しを行い、期待される要素が入っているか確認します。
-*			期待される要素が入っていれば成功です。
-*/
-TEST_F(LinkedListTestFixture, ConstIteratorIncrementBeginToEnd)
-{
-	ScoreData TestData[3];
-	TestData[0].Score = 0;
-	TestData[0].Name = "Test0";
-	TestData[1].Score = 1;
-	TestData[1].Name = "Test1";
-	TestData[2].Score = 2;
-	TestData[2].Name = "Test2";
-
-	auto Itr = pList->GetConstBegin();
+	// 非コンストイテレータ
+	auto ConstItr = pList->GetConstBegin();
 	for (int i = 0; i < 3; ++i)
 	{
-		auto& Data = *Itr;
+		auto& Data = *ConstItr;
 
 		// 正しいかチェック
 		EXPECT_EQ(TestData[i].Score, Data.Score);
 		EXPECT_EQ(TestData[i].Name, Data.Name);
 
-		++Itr;
+		++ConstItr;
 	}
 }
 
@@ -357,27 +256,23 @@ TEST_F(LinkedListTestFixture, ConstIteratorIncrementBeginToEnd)
 */
 TEST_F(LinkedListTestFixture, IteratorPrefixIncrement)
 {
-	// 先頭イテレータ
-	auto Itr = pList->GetBegin();
+	// 非コンストイテレータ
+	{
+		// 先頭イテレータ
+		auto Itr = pList->GetBegin();
 
-	EXPECT_EQ(1, (*(++Itr)).Score);	// 前置インクリメントなので戻り値は変更後のはず
-	EXPECT_EQ(1, (*Itr).Score);		// 次を指しているかチェック
-}
+		EXPECT_EQ(1, (*(++Itr)).Score);	// 前置インクリメントなので戻り値は変更後のはず
+		EXPECT_EQ(1, (*Itr).Score);		// 次を指しているかチェック
+	}
 
-/**
-* @brief	前置インクリメントを行った際の挙動
-* @details	ID:9
-*			イテレータをリストの末尾に向かって一つ進めるテストです。
-*			コンストなイテレータの、インクリメント時の値とインクリメント後の値を確認します。
-*			次の要素を指していたら成功です。
-*/
-TEST_F(LinkedListTestFixture, ConstIteratorPrefixIncrement)
-{
-	// 先頭イテレータ
-	auto Itr = pList->GetConstBegin();
+	// コンストイテレータ
+	{
+		// 先頭イテレータ
+		auto ConstItr = pList->GetConstBegin();
 
-	EXPECT_EQ(1, (*(++Itr)).Score);	// 前置インクリメントなので戻り値は変更後のはず
-	EXPECT_EQ(1, (*Itr).Score);		// 次を指しているかチェック
+		EXPECT_EQ(1, (*(++ConstItr)).Score);	// 前置インクリメントなので戻り値は変更後のはず
+		EXPECT_EQ(1, (*ConstItr).Score);		// 次を指しているかチェック
+	}
 }
 
 /**
@@ -389,27 +284,23 @@ TEST_F(LinkedListTestFixture, ConstIteratorPrefixIncrement)
 */
 TEST_F(LinkedListTestFixture, IteratorPostfixIncrement)
 {
-	// 先頭イテレータ
-	auto Itr = pList->GetBegin();
+	// 非コンストイテレータ
+	{
+		// 先頭イテレータ
+		auto Itr = pList->GetBegin();
 
-	EXPECT_EQ(0, (*(Itr++)).Score);	// 後置インクリメントなので戻り値は変更前のはず
-	EXPECT_EQ(1, (*Itr).Score);		// 次を指しているかチェック
-}
+		EXPECT_EQ(0, (*(Itr++)).Score);	// 後置インクリメントなので戻り値は変更前のはず
+		EXPECT_EQ(1, (*Itr).Score);		// 次を指しているかチェック
+	}
 
-/**
-* @brief	後置インクリメントを行った際の挙動
-* @details	ID:10
-*			イテレータをリストの末尾に向かって一つ進めるテストです。
-*			コンストなイテレータの、インクリメント時の値とインクリメント後の値を確認します。
-*			次の要素を指していたら成功です。
-*/
-TEST_F(LinkedListTestFixture, ConstIteratorPostfixIncrement)
-{
-	// 先頭イテレータ
-	auto Itr = pList->GetConstBegin();
+	// コンストイテレータ
+	{
+		// 先頭イテレータ
+		auto ConstItr = pList->GetConstBegin();
 
-	EXPECT_EQ(0, (*(Itr++)).Score);	// 後置インクリメントなので戻り値は変更前のはず
-	EXPECT_EQ(1, (*Itr).Score);		// 次を指しているかチェック
+		EXPECT_EQ(0, (*(ConstItr++)).Score);	// 後置インクリメントなので戻り値は変更前のはず
+		EXPECT_EQ(1, (*ConstItr).Score);		// 次を指しているかチェック
+	}
 }
 
 #pragma endregion
@@ -426,97 +317,61 @@ TEST_F(LinkedListTestFixture, ConstIteratorPostfixIncrement)
 TEST(IteratorDecrement, InvalidReference)
 {
 #ifdef _DEBUG
+	
+	// 非コンストイテレータ
 	LinkedList::Iterator Itr;
 	EXPECT_DEATH(--Itr, ".*Invalid Reference.*");
+
+	// コンストイテレータ
+	LinkedList::ConstIterator ConstItr;
+	EXPECT_DEATH(--ConstItr, ".*Invalid Reference.*");
+
 #else
 	SUCCEED();
 #endif
 }
 
 /**
-* @brief	リストの参照がない状態で呼び出した際の挙動
-* @details	ID:11
-*			イテレータをリストの先頭に向かって一つ進めるテストです。
-*			リストの参照がないとき、コンストなイテレータを末尾に向かって進めたときの挙動をチェックします。
-*			Assertが発生したら成功です。
-*/
-TEST(ConstIteratorDecrement, InvalidReference)
-{
-#ifdef _DEBUG
-	LinkedList::ConstIterator Itr;
-	EXPECT_DEATH(--Itr, ".*Invalid Reference.*");
-#else
-	SUCCEED();
-#endif
-}
-
-/**
-* @brief	リストが空の際の、先頭イテレータに対して呼び出した際の挙動
+* @brief	リストが空の際の、末尾イテレータに対して呼び出した際の挙動
 * @details	ID:12
-*			イテレータをリストの先頭に向かって一つ進めるテストです。
-*			リストが空の時、末尾に向かって進めたときの挙動をチェックします。
+*			イテレータをリストの末尾に向かって一つ進めるテストです。
+*			リストが空の時、先頭に向かって進めたときの挙動をチェックします。
 *			Assertが発生したら成功です。
 */
 TEST(IteratorDecrement, EmptyListBeginIterator)
 {
 #ifdef _DEBUG
 	LinkedList List;
-	auto Itr = List.GetBegin();
+
+	// 非コンストイテレータ
+	auto Itr = List.GetEnd();
 	EXPECT_DEATH(--Itr, ".*This Iterator Is Begin.*");
+
+	// コンストイテレータ
+	auto ConstItr = List.GetConstEnd();
+	EXPECT_DEATH(--Itr, ".*This Iterator Is Begin.*");
+
 #else
 	SUCCEED();
 #endif
 }
 
 /**
-* @brief	リストが空の際の、先頭イテレータに対して呼び出した際の挙動
-* @details	ID:12
-*			イテレータをリストの先頭に向かって一つ進めるテストです。
-*			リストが空の時、コンストなイテレータを末尾に向かって進めたときの挙動をチェックします。
-*			Assertが発生したら成功です。
-*/
-TEST(ConstIteratorDecrement, EmptyListBeginIterator)
-{
-#ifdef _DEBUG
-	LinkedList List;
-	auto Itr = List.GetConstBegin();
-	EXPECT_DEATH(--Itr, ".*This Iterator Is Begin.*");
-#else
-	SUCCEED();
-#endif
-}
-
-/**
-* @brief	末尾イテレータに対して呼び出した際の挙動
+* @brief	先頭イテレータに対して呼び出した際の挙動
 * @details	ID:13
 *			イテレータをリストの先頭に向かって一つ進めるテストです。
-*			末尾イテレータを末尾に向かって進めたときの挙動をチェックします。
+*			先頭イテレータを先頭に向かって進めたときの挙動をチェックします。
 *			Assertが発生したら成功です。
 */
 TEST(IteratorDecrement, EndIterator)
 {
 #ifdef _DEBUG
 	LinkedList List;
-	auto Itr = List.GetEnd();
-	EXPECT_DEATH(--Itr, ".*This Iterator Is Begin.*");	// 要素数が0なので、事実上 先頭イテレータ == 末尾イテレータになる
-#else
-	SUCCEED();
-#endif
-}
+	auto Itr = List.GetBegin();
+	EXPECT_DEATH(--Itr, ".*This Iterator Is Begin.*");
 
-/**
-* @brief	末尾イテレータに対して呼び出した際の挙動
-* @details	ID:13
-*			イテレータをリストの先頭に向かって一つ進めるテストです。
-*			コンストな末尾イテレータをコンストなイテレータを末尾に向かって進めたときの挙動をチェックします。
-*			Assertが発生したら成功です。
-*/
-TEST(ConstIteratorDecrement, EndIterator)
-{
-#ifdef _DEBUG
-	LinkedList List;
-	auto Itr = List.GetConstEnd();
-	EXPECT_DEATH(--Itr, ".*This Iterator Is Begin.*");	// 要素数が0なので、事実上 先頭イテレータ == 末尾イテレータになる
+	auto ConstItr = List.GetConstBegin();
+	EXPECT_DEATH(--ConstItr, ".*This Iterator Is Begin.*");
 #else
 	SUCCEED();
 #endif
@@ -539,44 +394,32 @@ TEST_F(LinkedListTestFixture, IteratorDecrementEndToBegin)
 	TestData[2].Score = 0;
 	TestData[2].Name = "Test0";
 
-	auto Itr = pList->GetEnd();
-	for (int i = 0; i < 3; ++i)
+	// 非コンストイテレータ
 	{
-		--Itr;
+		auto Itr = pList->GetEnd();
+		for (int i = 0; i < 3; ++i)
+		{
+			--Itr;
 
-		auto& Data = *Itr;
+			auto& Data = *Itr;
 
-		// 正しいかチェック
-		EXPECT_EQ(TestData[i].Score, Data.Score);
-		EXPECT_EQ(TestData[i].Name, Data.Name);
+			// 正しいかチェック
+			EXPECT_EQ(TestData[i].Score, Data.Score);
+			EXPECT_EQ(TestData[i].Name, Data.Name);
+		}
 	}
-}
 
-/**
-* @brief	リストに二つ以上の要素がある場合に呼び出した際の挙動
-* @details	ID:14
-*			イテレータをリストの先頭に向かって一つ進めるテストです。
-*			コンストなイテレータで先頭から末尾まで呼び出しを行い、期待される要素が入っているか確認します。
-*			期待される要素が入っていれば成功です。
-*/
-TEST_F(LinkedListTestFixture, ConstIteratorDecrementEndToBegin)
-{
-	ScoreData TestData[3];
-	TestData[0].Score = 2;
-	TestData[0].Name = "Test2";
-	TestData[1].Score = 1;
-	TestData[1].Name = "Test1";
-	TestData[2].Score = 0;
-	TestData[2].Name = "Test0";
-
-	auto Itr = pList->GetConstEnd();
-	for (int i = 0; i < 3; ++i)
+	// コンストイテレータ
 	{
-		--Itr;
+		auto Itr = pList->GetConstEnd();
+		for (int i = 0; i < 3; ++i)
+		{
+			--Itr;
 
-		auto& Data = *Itr;
-		EXPECT_EQ(TestData[i].Score,Data.Score);
-		EXPECT_EQ(TestData[i].Name, Data.Name);
+			auto& Data = *Itr;
+			EXPECT_EQ(TestData[i].Score, Data.Score);
+			EXPECT_EQ(TestData[i].Name, Data.Name);
+		}
 	}
 }
 
@@ -589,27 +432,17 @@ TEST_F(LinkedListTestFixture, ConstIteratorDecrementEndToBegin)
 */
 TEST_F(LinkedListTestFixture, IteratorPrefixDecrement)
 {
-	// 先頭イテレータ
+	// 非コンストな先頭イテレータ
 	auto Itr = pList->GetEnd();
 
 	EXPECT_EQ(2, (*(--Itr)).Score);	// 前置デクリメントなので戻り値は変更後のはず
 	EXPECT_EQ(2, (*Itr).Score);		// 前を指しているかチェック
-}
 
-/**
-* @brief	前置デクリメント行った際の挙動
-* @details	ID:15
-*			イテレータをリストの先頭に向かって一つ進めるテストです。
-*			コンストなイテレータの、デクリメント時の値とデクリメント後の値を確認します。
-*			前の要素を指していたら成功です。
-*/
-TEST_F(LinkedListTestFixture, ConstIteratorPrefixDecrement)
-{
-	// 先頭イテレータ
-	auto Itr = pList->GetConstEnd();
+	// コンストな先頭イテレータ
+	auto ConstItr = pList->GetConstEnd();
 
-	EXPECT_EQ(2, (*(--Itr)).Score);	// 前置デクリメントなので戻り値は変更後のはず
-	EXPECT_EQ(2, (*Itr).Score);		// 前を指しているかチェック
+	EXPECT_EQ(2, (*(--ConstItr)).Score);	// 前置デクリメントなので戻り値は変更後のはず
+	EXPECT_EQ(2, (*ConstItr).Score);		// 前を指しているかチェック
 }
 
 /**
@@ -621,31 +454,27 @@ TEST_F(LinkedListTestFixture, ConstIteratorPrefixDecrement)
 */
 TEST_F(LinkedListTestFixture, IteratorPostfixDecrement)
 {
-	// 先頭イテレータ
-	auto Itr = pList->GetEnd();
+	// 非コンストイテレータ
+	{
+		// 先頭イテレータ
+		auto Itr = pList->GetEnd();
 
-	--Itr;	// ここでデクリメントしておかないとダミーノードにアクセスしてしまう
+		--Itr;	// ここでデクリメントしておかないとダミーノードにアクセスしてしまう
 
-	EXPECT_EQ(2, (*(Itr--)).Score);	// 後置デクリメントなので戻り値は変更前のはず
-	EXPECT_EQ(1, (*Itr).Score);		// 前を指しているかチェック
-}
+		EXPECT_EQ(2, (*(Itr--)).Score);	// 後置デクリメントなので戻り値は変更前のはず
+		EXPECT_EQ(1, (*Itr).Score);		// 前を指しているかチェック
+	}
 
-/**
-* @brief	後置デクリメントを行った際の挙動
-* @details	ID:16
-*			イテレータをリストの先頭に向かって一つ進めるテストです。
-*			コンストなイテレータの、デクリメント時の値とデクリメント後の値を確認します。
-*			前の要素を指していたら成功です。
-*/
-TEST_F(LinkedListTestFixture, ConstIteratorPostfixDecrement)
-{
-	// 先頭イテレータ
-	auto Itr = pList->GetConstEnd();
+	// コンストイテレータ
+	{
+		// 先頭イテレータ
+		auto ConstItr = pList->GetConstEnd();
 
-	--Itr;	// ここでデクリメントしておかないとダミーノードにアクセスしてしまう
+		--ConstItr;	// ここでデクリメントしておかないとダミーノードにアクセスしてしまう
 
-	EXPECT_EQ(2, (*(Itr--)).Score);	// 後置インクリメントなので戻り値は変更前のはず
-	EXPECT_EQ(1, (*Itr).Score);		// 前を指しているかチェック
+		EXPECT_EQ(2, (*(ConstItr--)).Score);	// 後置インクリメントなので戻り値は変更前のはず
+		EXPECT_EQ(1, (*ConstItr).Score);		// 前を指しているかチェック
+	}
 }
 
 #pragma endregion
@@ -660,30 +489,27 @@ TEST_F(LinkedListTestFixture, ConstIteratorPostfixDecrement)
 */
 TEST_F(LinkedListTestFixture, IteratorCopyConstractor)
 {
-	auto Itr = pList->GetBegin();
+	// 非コンストイテレータ
+	{
+		auto Itr = pList->GetBegin();
 
-	// コピー
-	LinkedList::Iterator CopyItr(Itr);
+		// コピー
+		LinkedList::Iterator CopyItr(Itr);
 
-	// チェック
-	EXPECT_TRUE(CopyItr == Itr);
-}
+		// チェック
+		EXPECT_TRUE(CopyItr == Itr);
+	}
 
-/**
-* @brief	コピーコンストラクト後の値がコピー元と等しいことをチェック
-* @details	ID:18
-*			コピーコンストラクタでコピーしたコンストなイテレータがコピー元と同一であることを確認するテストです。
-*			コピーして作成したイテレータとコピー元が同一であれば成功です。
-*/
-TEST_F(LinkedListTestFixture, ConstIteratorCopyConstractor)
-{
-	auto Itr = pList->GetConstBegin();
+	// コンストイテレータ
+	{
+		auto ConstItr = pList->GetConstBegin();
 
-	// コピー
-	LinkedList::ConstIterator CopyItr(Itr);
+		// コピー
+		LinkedList::ConstIterator CopyItr(ConstItr);
 
-	// チェック
-	EXPECT_TRUE(CopyItr == Itr);
+		// チェック
+		EXPECT_TRUE(CopyItr == ConstItr);
+	}
 }
 
 #pragma endregion
@@ -698,32 +524,29 @@ TEST_F(LinkedListTestFixture, ConstIteratorCopyConstractor)
 */
 TEST_F(LinkedListTestFixture, IteratorCopyAssignmentConstractor)
 {
-	auto Itr = pList->GetBegin();
+	// 非コンストイテレータ
+	{
+		auto Itr = pList->GetBegin();
 
-	// コピー
-	LinkedList::Iterator CopyItr;
-	CopyItr = Itr;
+		// コピー
+		LinkedList::Iterator CopyItr;
+		CopyItr = Itr;
 
-	// チェック
-	EXPECT_TRUE(CopyItr == Itr);
-}
+		// チェック
+		EXPECT_TRUE(CopyItr == Itr);
+	}
 
-/**
-* @brief	代入後の値がコピー元と等しいことをチェック
-* @details	ID:20
-*			コピー代入でコピーしたコンストなイテレータがコピー元と同一であることを確認するテストです。
-*			コピーして作成したイテレータとコピー元が同一であれば成功です。
-*/
-TEST_F(LinkedListTestFixture, ConstIteratorCopyAssignmentConstractor)
-{
-	auto Itr = pList->GetConstBegin();
+	// コンストイテレータ
+	{
+		auto Itr = pList->GetConstBegin();
 
-	// コピー
-	LinkedList::ConstIterator CopyItr;
-	CopyItr = Itr;
+		// コピー
+		LinkedList::ConstIterator CopyItr;
+		CopyItr = Itr;
 
-	// チェック
-	EXPECT_TRUE(CopyItr == Itr);
+		// チェック
+		EXPECT_TRUE(CopyItr == Itr);
+	}
 }
 
 #pragma endregion
@@ -738,30 +561,26 @@ TEST_F(LinkedListTestFixture, ConstIteratorCopyAssignmentConstractor)
 */
 TEST(IteratorCompareEQ, EmptyListBeginAndEnd)
 {
+	// 空のリストを用意する
 	LinkedList List;
 
-	auto BeginItr = List.GetBegin();
-	auto EndItr = List.GetEnd();
+	// 非コンストイテレータ
+	{
+		auto BeginItr = List.GetBegin();
+		auto EndItr = List.GetEnd();
 
-	// 同一であるか確認
-	EXPECT_TRUE(BeginItr == EndItr);
-}
+		// 同一であるか確認
+		EXPECT_TRUE(BeginItr == EndItr);
+	}
 
-/**
-* @brief	リストが空の状態での先頭イテレータと末尾イテレータを比較した際の挙動をチェック
-* @details	ID:21
-*			空のリストから取得したコンストな先頭イテレータとコンストな末尾イテレータを比較するテストです。
-*			trueが返れば成功です。
-*/
-TEST(ConstIteratorCompareEQ, EmptyListBeginAndEnd)
-{
-	LinkedList List;
+	// コンストイテレータ
+	{
+		auto BeginItr = List.GetConstBegin();
+		auto EndItr = List.GetConstEnd();
 
-	auto BeginItr = List.GetConstBegin();
-	auto EndItr = List.GetConstEnd();
-
-	// 同一であるか確認
-	EXPECT_TRUE(BeginItr == EndItr);
+		// 同一であるか確認
+		EXPECT_TRUE(BeginItr == EndItr);
+	}
 }
 
 /**
@@ -772,26 +591,23 @@ TEST(ConstIteratorCompareEQ, EmptyListBeginAndEnd)
 */
 TEST_F(LinkedListTestFixture, IteratorCompareEQ)
 {
-	auto BeginItr = pList->GetBegin();
-	auto Itr = pList->GetBegin();
+	// 非コンストイテレータ
+	{
+		auto BeginItr = pList->GetBegin();
+		auto Itr = pList->GetBegin();
 
-	// 同一であるか確認
-	EXPECT_TRUE(BeginItr == Itr);
-}
+		// 同一であるか確認
+		EXPECT_TRUE(BeginItr == Itr);
+	}
 
-/**
-* @brief	同一のイテレータを比較した際の挙動
-* @details	ID:22
-*			同一のコンストなイテレータどうしで比較した時の挙動をチェックします。
-*			trueが返れば成功です。
-*/
-TEST_F(LinkedListTestFixture, ConstIteratorCompareEQ)
-{
-	auto BeginItr = pList->GetConstBegin();
-	auto Itr = pList->GetConstBegin();
+	// コンストイテレータ
+	{
+		auto BeginItr = pList->GetConstBegin();
+		auto Itr = pList->GetConstBegin();
 
-	// 同一であるか確認
-	EXPECT_TRUE(BeginItr == Itr);
+		// 同一であるか確認
+		EXPECT_TRUE(BeginItr == Itr);
+	}
 }
 
 /**
@@ -802,30 +618,27 @@ TEST_F(LinkedListTestFixture, ConstIteratorCompareEQ)
 */
 TEST_F(LinkedListTestFixture, DiffrentIteratorCompareEQ)
 {
-	auto BeginItr = pList->GetBegin();
-	auto Itr = pList->GetBegin();
+	// 非コンストイテレータ
+	{
+		auto BeginItr = pList->GetBegin();
+		auto Itr = pList->GetBegin();
 
-	++Itr;	// ずらすことで別のイテレータにする
+		++Itr;	// ずらすことで別のイテレータにする
 
-	// 同一であるか確認
-	EXPECT_FALSE(BeginItr == Itr);
-}
+		// 同一であるか確認
+		EXPECT_FALSE(BeginItr == Itr);
+	}
 
-/**
-* @brief	異なるイテレータを比較した際の挙動
-* @details	ID:23
-*			異なるコンストなイテレータどうしで比較した時の挙動をチェックします。
-*			falseが返れば成功です。
-*/
-TEST_F(LinkedListTestFixture, DiffrentConstIteratorCompareEQ)
-{
-	auto BeginItr = pList->GetConstBegin();
-	auto Itr = pList->GetConstBegin();
+	// コンストイテレータ
+	{
+		auto BeginItr = pList->GetConstBegin();
+		auto Itr = pList->GetConstBegin();
 
-	++Itr;	// ずらすことで別のイテレータにする
+		++Itr;	// ずらすことで別のイテレータにする
 
-	// 同一であるか確認
-	EXPECT_FALSE(BeginItr == Itr);
+		// 同一であるか確認
+		EXPECT_FALSE(BeginItr == Itr);
+	}
 }
 
 #pragma endregion
@@ -840,30 +653,26 @@ TEST_F(LinkedListTestFixture, DiffrentConstIteratorCompareEQ)
 */
 TEST(IteratorCompareNE, EmptyListBeginAndEnd)
 {
+	// 空のイテレータ
 	LinkedList List;
 
-	auto BeginItr = List.GetBegin();
-	auto EndItr = List.GetEnd();
+	// 非コンストイテレータ
+	{
+		auto BeginItr = List.GetBegin();
+		auto EndItr = List.GetEnd();
 
-	// 異なるか確認
-	EXPECT_FALSE(BeginItr != EndItr);
-}
+		// 異なるか確認
+		EXPECT_FALSE(BeginItr != EndItr);
+	}
 
-/**
-* @brief	リストが空の状態での先頭イテレータと末尾イテレータを比較した際の挙動をチェック
-* @details	ID:24
-*			空のリストから取得したコンストな先頭イテレータとコンストな末尾イテレータを比較するテストです。
-*			falseが返れば成功です。
-*/
-TEST(ConstIteratorCompareNE, EmptyListBeginAndEnd)
-{
-	LinkedList List;
+	// コンストイテレータ
+	{
+		auto BeginItr = List.GetConstBegin();
+		auto EndItr = List.GetConstEnd();
 
-	auto BeginItr = List.GetConstBegin();
-	auto EndItr = List.GetConstEnd();
-
-	// 異なるか確認
-	EXPECT_FALSE(BeginItr != EndItr);
+		// 異なるか確認
+		EXPECT_FALSE(BeginItr != EndItr);
+	}
 }
 
 /**
@@ -874,60 +683,54 @@ TEST(ConstIteratorCompareNE, EmptyListBeginAndEnd)
 */
 TEST_F(LinkedListTestFixture, IteratorCompareNE)
 {
-	auto BeginItr = pList->GetBegin();
-	auto Itr = pList->GetBegin();
+	// 非コンストイテレータ
+	{
+		auto BeginItr = pList->GetBegin();
+		auto Itr = pList->GetBegin();
 
-	// 異なるか確認
-	EXPECT_FALSE(BeginItr != Itr);
-}
+		// 異なるか確認
+		EXPECT_FALSE(BeginItr != Itr);
+	}
 
-/**
-* @brief	同一のイテレータを比較した際の挙動
-* @details	ID:25
-*			同一のコンストなイテレータどうしで比較した時の挙動をチェックします。
-*			falseが返れば成功です。
-*/
-TEST_F(LinkedListTestFixture, ConstIteratorCompareNE)
-{
-	auto BeginItr = pList->GetConstBegin();
-	auto Itr = pList->GetConstBegin();
+	// コンストイテレータ
+	{
+		auto BeginItr = pList->GetConstBegin();
+		auto Itr = pList->GetConstBegin();
 
-	// 異なるか確認
-	EXPECT_FALSE(BeginItr != Itr);
+		// 異なるか確認
+		EXPECT_FALSE(BeginItr != Itr);
+	}
 }
 
 /**
 * @brief	異なるイテレータを比較した際の挙動
-* @details	ID:23
+* @details	ID:26
 *			異なるイテレータどうしで比較した時の挙動をチェックします。
 *			trueが返れば成功です。
 */
 TEST_F(LinkedListTestFixture, DiffrentIteratorCompareNE)
 {
-	auto BeginItr = pList->GetBegin();
-	auto Itr = pList->GetBegin();
+	// コンストイテレータ
+	{
+		auto BeginItr = pList->GetBegin();
+		auto Itr = pList->GetBegin();
 
-	++Itr;	// ずらすことで別のイテレータにする
+		++Itr;	// ずらすことで別のイテレータにする
 
-	// 異なるか確認
-	EXPECT_TRUE(BeginItr != Itr);
-}
+		// 異なるか確認
+		EXPECT_TRUE(BeginItr != Itr);
+	}
 
-/**
-* @brief	異なるイテレータを比較した際の挙動
-* @details	ID:23
-*			異なるコンストなイテレータどうしで比較した時の挙動をチェックします。
-*			trueが返れば成功です。
-*/
-TEST_F(LinkedListTestFixture, DiffrentConstIteratorCompareNE)
-{
-	auto BeginItr = pList->GetConstBegin();
-	auto Itr = pList->GetConstBegin();
+	// 非コンストイテレータ
+	{
+		auto BeginItr = pList->GetConstBegin();
+		auto Itr = pList->GetConstBegin();
 
-	++Itr;	// ずらすことで別のイテレータにする
+		++Itr;	// ずらすことで別のイテレータにする
 
-	// 異なるか確認
-	EXPECT_TRUE(BeginItr != Itr);
+		// 異なるか確認
+		EXPECT_TRUE(BeginItr != Itr);
+	}
 }
 
 #pragma endregion

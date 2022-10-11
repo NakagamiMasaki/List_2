@@ -29,7 +29,8 @@ TEST(ConstIteratorAssign, FunctionIsConst)
 	LinkedList List;
 	auto Itr = List.GetConstBegin();
 
-	Itr->Score = 100;
+	auto& Data = *Itr;
+	Data.Score = 100;
 
 	EXPECT_EQ(0, List.GetSize());
 #else

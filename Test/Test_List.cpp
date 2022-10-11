@@ -162,8 +162,8 @@ TEST(GetDataNum, WhenDeleteEmptyList)
 {
 	LinkedList List;
 
-	LinkedList::ConstIterator InvalidItr;	// 無効なイテレータ
-	ASSERT_FALSE(List.Delete(InvalidItr));
+	auto Itr = List.GetEnd();	// イテレータ
+	ASSERT_FALSE(List.Delete(Itr));
 
 	EXPECT_EQ(List.GetSize(), 0);
 }
@@ -177,33 +177,24 @@ TEST(GetDataNum, WhenDeleteEmptyList)
 *			リストが空の状態で先頭にデータの挿入を行ったときの挙動を確認します。
 *			trueであれば成功です。
 */
-TEST(InsertData, WhenEmptyToBegin)
+TEST(InsertData, WhenEmptyTo)
 {
 	LinkedList List;
 	ScoreData Data;
 	Data.Score = 9;
 	Data.Name = "Test9";
 
-	auto Itr = List.GetBegin();
-	EXPECT_TRUE(List.Insert(Itr, Data));
-}
+	// 先頭イテレータ
+	{
+		auto Itr = List.GetBegin();
+		EXPECT_TRUE(List.Insert(Itr, Data));
+	}
 
-/**
-* @brief	リストが空である場合に、挿入した際の挙動
-* @details	ID:9
-*			データの挿入のテストです。
-*			リストが空の状態で末尾にデータの挿入を行ったときの挙動を確認します。
-*			trueであれば成功です。
-*/
-TEST(InsertData, WhenEmptyToEnd)
-{
-	LinkedList List;
-	ScoreData Data;
-	Data.Score = 9;
-	Data.Name = "Test9_1";
-
-	auto Itr = List.GetEnd();
-	EXPECT_TRUE(List.Insert(Itr, Data));
+	// 末尾イテレータ
+	{
+		auto ConstItr = List.GetEnd();
+		EXPECT_TRUE(List.Insert(ConstItr, Data));
+	}
 }
 
 /**
@@ -312,7 +303,7 @@ TEST_F(LinkedListTestFixture, WhenSomeDataExistToCenter)
 * @brief	ConstIteratorを指定して挿入を行った際の挙動
 * @details	ID:13
 *			データの挿入のテストです。
-*			リストに複数の要素がある状態で、コンストなイテレータを利用して先頭にデータの挿入を行ったときの挙動を確認します。
+*			リストに複数の要素がある状態で、コンストなイテレータを利用して先頭, 末尾, 先頭でも末尾でもない要素にデータの挿入を行ったときの挙動を確認します。
 *			trueであれば成功です。
 */
 TEST_F(LinkedListTestFixture, InsertWithConstIteratorToBegin)
@@ -336,97 +327,85 @@ TEST_F(LinkedListTestFixture, InsertWithConstIteratorToBegin)
 	}
 
 	//*** 格納済みのデータに影響がないかチェック
-	// 前から順番に
-	// Score == 13;
-	// Name == "Test13";
-	// Score == 0;
-	// Name == "Test0";
-	// Score == 1;
-	// Name == "Test1";
-	// Score == 2;
-	// Name == "Test2";
-	// ならOK
+	{
+		// 前から順番に
+		// Score == 13;
+		// Name == "Test13";
+		// Score == 0;
+		// Name == "Test0";
+		// Score == 1;
+		// Name == "Test1";
+		// Score == 2;
+		// Name == "Test2";
+		// ならOK
 
-	ScoreData TestData[4];
-	TestData[0].Score = 13;
-	TestData[0].Name = "Test13";
-	TestData[1].Score = 0;
-	TestData[1].Name = "Test0";
-	TestData[2].Score = 1;
-	TestData[2].Name = "Test1";
-	TestData[3].Score = 2;
-	TestData[3].Name = "Test2";
+		ScoreData TestData[4];
+		TestData[0].Score = 13;
+		TestData[0].Name = "Test13";
+		TestData[1].Score = 0;
+		TestData[1].Name = "Test0";
+		TestData[2].Score = 1;
+		TestData[2].Name = "Test1";
+		TestData[3].Score = 2;
+		TestData[3].Name = "Test2";
 
-	TestListItem(*pList, TestData, _countof(TestData));
-}
+		TestListItem(*pList, TestData, _countof(TestData));
+	}
 
-/**
-* @brief	ConstIteratorを指定して挿入を行った際の挙動
-* @details	ID:13
-*			データの挿入のテストです。
-*			リストに複数の要素がある状態で、コンストなイテレータを利用して末尾にデータの挿入を行ったときの挙動を確認します。
-*			trueであれば成功です。
-*/
-TEST_F(LinkedListTestFixture, InsertWithConstIteratorToEnd)
-{
-	//*** 末尾を示すコンストなイテレータを使ってデータを挿入する。
+	//*** 末尾を指すコンストなイテレータを使ってデータを挿入する
 	{
 		auto ConstItr = pList->GetConstEnd();
 		ScoreData Data;
-		Data.Score = 13;
-		Data.Name = "Test13";
+		Data.Score = 14;
+		Data.Name = "Test13_End";
 		EXPECT_TRUE(pList->Insert(ConstItr, Data));
 	}
 
-	//*** 期待される位置に挿入されているかチェック
+	//*** 期待される位置に入っているかチェック
 	{
 		auto Itr = pList->GetEnd();
 		--Itr;
 		auto& Data = *Itr;
-		EXPECT_EQ(13, Data.Score);
-		EXPECT_EQ("Test13", Data.Name);
+		EXPECT_EQ(14, Data.Score);
+		EXPECT_EQ("Test13_End", Data.Name);
 	}
 
 	//*** 格納済みのデータに影響がないかチェック
-	// 前から順番に
-	// Score == 0;
-	// Name == "Test0";
-	// Score == 1;
-	// Name == "Test1";
-	// Score == 2;
-	// Name == "Test2";
-	// Score == 13;
-	// Name == "Test13";
-	// ならOK
+	{
+		// 前から順番に
+		// Score == 13;
+		// Name == "Test13";
+		// Score == 0;
+		// Name == "Test0";
+		// Score == 1;
+		// Name == "Test1";
+		// Score == 2;
+		// Name == "Test2";
+		// Score == 14
+		// Name == "Test13_End"
+		// ならOK
 
-	ScoreData TestData[4];
-	TestData[0].Score = 0;
-	TestData[0].Name = "Test0";
-	TestData[1].Score = 1;
-	TestData[1].Name = "Test1";
-	TestData[3].Score = 13;
-	TestData[3].Name = "Test13";
-	TestData[2].Score = 2;
-	TestData[2].Name = "Test2";
+		ScoreData TestData[5];
+		TestData[0].Score = 13;
+		TestData[0].Name = "Test13";
+		TestData[1].Score = 0;
+		TestData[1].Name = "Test0";
+		TestData[2].Score = 1;
+		TestData[2].Name = "Test1";
+		TestData[3].Score = 2;
+		TestData[3].Name = "Test2";
+		TestData[4].Score = 14;
+		TestData[4].Name = "Test13_End";
 
-	TestListItem(*pList, TestData, _countof(TestData));
-}
+		TestListItem(*pList, TestData, _countof(TestData));
+	}
 
-/**
-* @brief	ConstIteratorを指定して挿入を行った際の挙動
-* @details	ID:13
-*			データの挿入のテストです。
-*			リストに複数の要素がある状態で、コンストなイテレータを利用して先頭でも末尾でもない位置にデータの挿入を行ったときの挙動を確認します。
-*			trueであれば成功です。
-*/
-TEST_F(LinkedListTestFixture, InsertWithConstIteratorToCenter)
-{
 	//*** 先頭の次を示すコンストなイテレータを使ってデータを挿入する。
 	{
 		auto ConstItr = pList->GetConstBegin();
 		ScoreData Data;
-		Data.Score = 13;
-		Data.Name = "Test13";
+		Data.Score = 15;
+		Data.Name = "Test13_Center";
 		++ConstItr;
 		EXPECT_TRUE(pList->Insert(ConstItr, Data));
 	}
@@ -437,33 +416,43 @@ TEST_F(LinkedListTestFixture, InsertWithConstIteratorToCenter)
 		++Itr;
 		++Itr;
 		auto& Data = *Itr;
-		EXPECT_EQ(1, Data.Score);
-		EXPECT_EQ("Test1", Data.Name);
+		EXPECT_EQ(0, Data.Score);
+		EXPECT_EQ("Test0", Data.Name);
 	}
 
 	//*** 格納済みのデータに影響がないかチェック
-	// 前から順番に
-	// Score == 0;
-	// Name == "Test0";
-	// Score == 13;
-	// Name == "Test13";
-	// Score == 1;
-	// Name == "Test1";
-	// Score == 2;
-	// Name == "Test2";
-	// ならOK
+	{
+		// 前から順番に
+		// Score == 13;
+		// Name == "Test13";
+		// Score == 15;
+		// Name == "Test13_Center";
+		// Score == 0;
+		// Name == "Test0";
+		// Score == 1;
+		// Name == "Test1";
+		// Score == 2;
+		// Name == "Test2";
+		// Score == 14;
+		// Name == "Test13_End";
+		// ならOK
 
-	ScoreData TestData[4];
-	TestData[0].Score = 0;
-	TestData[0].Name = "Test0";
-	TestData[1].Score = 13;
-	TestData[1].Name = "Test13";
-	TestData[2].Score = 1;
-	TestData[2].Name = "Test1";
-	TestData[3].Score = 2;
-	TestData[3].Name = "Test2";
+		ScoreData TestData[6];
+		TestData[0].Score = 13;
+		TestData[0].Name = "Test13";
+		TestData[1].Score = 15;
+		TestData[1].Name = "Test13_Center";
+		TestData[2].Score = 0;
+		TestData[2].Name = "Test0";
+		TestData[3].Score = 1;
+		TestData[3].Name = "Test1";
+		TestData[4].Score = 2;
+		TestData[4].Name = "Test2";
+		TestData[5].Score = 14;
+		TestData[5].Name = "Test13_End";
 
-	TestListItem(*pList, TestData, _countof(TestData));
+		TestListItem(*pList, TestData, _countof(TestData));
+	}
 }
 
 /**
@@ -476,8 +465,6 @@ TEST_F(LinkedListTestFixture, InsertWithConstIteratorToCenter)
 TEST(InsertData, WithInvalidIterator)
 {
 	LinkedList List1;
-	LinkedList List2;
-
 	ScoreData Data;
 	Data.Score = 14;
 	Data.Name = "Test14";
@@ -487,6 +474,7 @@ TEST(InsertData, WithInvalidIterator)
 	EXPECT_FALSE(List1.Insert(InvalidItr, Data));
 
 	// 別のリストを参照しているイテレータで挿入
+	LinkedList List2;
 	auto InvalidRefItr = List2.GetBegin();
 	EXPECT_FALSE(List1.Insert(InvalidRefItr, Data));
 }
@@ -712,144 +700,125 @@ TEST(GetBeginIterator, When2ItemExist)
 * @brief	データの挿入を行った後に、呼び出した際の挙動
 * @details	ID:26
 *			先頭イテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭に挿入した後に先頭イテレータを取得した時の挙動をチェックします。
+*			先頭, 末尾, 先頭でも末尾でもない位置に挿入した後に先頭イテレータを取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
-TEST_F(LinkedListTestFixture, GetBeginIteratorWhenInsertBegin)
+TEST(GetBeginIterator, WhenInsertBegin)
 {
+	// リスト
+	LinkedList List;
+
 	// 先頭にデータを挿入する
 	ScoreData Data;
 	Data.Score = 26;
-	Data.Name = "Test26";
-	auto Itr = pList->GetBegin();
-	ASSERT_TRUE(pList->Insert(Itr, Data));
+	Data.Name = "Test26_Begin";
+	auto Itr = List.GetBegin();
+	ASSERT_TRUE(List.Insert(Itr, Data));
 
 	// 先頭イテレータを取得
-	auto BeginItr = pList->GetBegin();
+	auto BeginItr = List.GetBegin();
 
 	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(26, TestData.Score);
-	EXPECT_EQ("Test26", TestData.Name);
-}
+	{
+		auto& TestData = *BeginItr;
+		EXPECT_EQ(26, TestData.Score);
+		EXPECT_EQ("Test26_Begin", TestData.Name);
+	}
 
-/**
-* @brief	データの挿入を行った後に、呼び出した際の挙動
-* @details	ID:26
-*			先頭イテレータの取得のテストです。
-*			リストに複数の要素があるとき、末尾に挿入した後に先頭イテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetBeginIteratorWhenInsertEnd)
-{
-	// 末尾にデータを挿入する
-	ScoreData Data;
-	Data.Score = 26;
-	Data.Name = "Test26";
-	auto Itr = pList->GetEnd();
-	ASSERT_TRUE(pList->Insert(Itr, Data));
+	// 末尾にデータを追加する
+	Data.Score = 27;
+	Data.Name = "Test26_End";
+	Itr = List.GetEnd();
+	ASSERT_TRUE(List.Insert(Itr, Data));
 
-	// 先頭イテレータを取得
-	auto BeginItr = pList->GetBegin();
+	// 先頭イテレータを再取得
+	BeginItr = List.GetBegin();
 
 	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(0, TestData.Score);
-	EXPECT_EQ("Test0", TestData.Name);
-}
+	{
+		auto& TestData = *BeginItr;
+		EXPECT_EQ(26, TestData.Score);
+		EXPECT_EQ("Test26_Begin", TestData.Name);
+	}
 
-/**
-* @brief	データの挿入を行った後に、呼び出した際の挙動
-* @details	ID:26
-*			先頭イテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭でも末尾でもない位置に挿入した後に先頭イテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetBeginIteratorWhenInsertCenter)
-{
 	// 先頭でも末尾でもない位置にデータを挿入する
-	ScoreData Data;
-	Data.Score = 26;
-	Data.Name = "Test26";
-	auto Itr = pList->GetBegin();
+	Data;
+	Data.Score = 28;
+	Data.Name = "Test26_Center";
+	Itr = List.GetBegin();
 	++Itr;
-	ASSERT_TRUE(pList->Insert(Itr, Data));
+	ASSERT_TRUE(List.Insert(Itr, Data));
 
-	// 先頭イテレータを取得
-	auto BeginItr = pList->GetBegin();
+	// 先頭イテレータを再取得
+	BeginItr = List.GetBegin();
 
 	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(0, TestData.Score);
-	EXPECT_EQ("Test0", TestData.Name);
+	{
+		auto& TestData = *BeginItr;
+		EXPECT_EQ(26, TestData.Score);
+		EXPECT_EQ("Test26_Begin", TestData.Name);
+	}
 }
 
 /**
 * @brief	データの削除を行った後に、呼び出した際の挙動
 * @details	ID:27
 *			先頭イテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭要素を削除した後に先頭イテレータを取得した時の挙動をチェックします。
+*			リストに複数の要素があるとき、先頭要素, 末尾要素, 先頭でも末尾でもない要素を削除した後に先頭イテレータを取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
 TEST_F(LinkedListTestFixture, GetBeginIteratorWhenDeleteBegin)
 {
-	// 先頭要素を削除する
-	auto Itr = pList->GetBegin();
-	ASSERT_TRUE(pList->Delete(Itr));
+	// 中央(先頭でも末尾でもない)要素を削除
+	// 先頭要素を削除
+	// 末尾要素を削除
+	// の順で確認する。
+	// なので、データが4つ以上必要になるためもう1つ追加する。
+	{
+		ScoreData Data{ 3, "Test3" };
+		auto Itr = pList->GetEnd();
+		pList->Insert(Itr, Data);
+	}
 
-	// 先頭イテレータを取得
-	auto BeginItr = pList->GetBegin();
+	// 先頭イテレータを取得して、先頭でも末尾でもない要素に進める
+	auto CenterItr = pList->GetBegin();
+	++CenterItr;
 
-	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(1, TestData.Score);
-	EXPECT_EQ("Test1", TestData.Name);
-}
-
-/**
-* @brief	データの削除を行った後に、呼び出した際の挙動
-* @details	ID:27
-*			先頭イテレータの取得のテストです。
-*			リストに複数の要素があるとき、末尾要素を削除した後に先頭イテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetBeginIteratorWhenDeleteEnd)
-{
-	// 末尾要素を削除する
-	auto Itr = pList->GetEnd();
-	--Itr;
-	ASSERT_TRUE(pList->Delete(Itr));
-
-	// 先頭イテレータを取得
-	auto BeginItr = pList->GetBegin();
+	// 先頭でも末尾でもない要素を削除して、先頭要素を確認する
+	pList->Delete(CenterItr);
 
 	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(0, TestData.Score);
-	EXPECT_EQ("Test0", TestData.Name);
-}
+	{
+		auto TestItr = pList->GetBegin();
+		auto& TestData = *TestItr;
+		EXPECT_EQ(0, TestData.Score);
+		EXPECT_EQ("Test0", TestData.Name);
+	}
 
-/**
-* @brief	データの削除を行った後に、呼び出した際の挙動
-* @details	ID:27
-*			先頭イテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭でも末尾でもない要素を削除した後に先頭イテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetBeginIteratorWhenDeleteCenter)
-{
-	// 先頭でも末尾でもない要素を削除する
-	auto Itr = pList->GetBegin();
-	++Itr;
-	ASSERT_TRUE(pList->Delete(Itr));
-
-	// 先頭イテレータを取得
+	// 先頭要素を削除して、先頭要素を確認する
 	auto BeginItr = pList->GetBegin();
+	pList->Delete(BeginItr);
 
 	// 挙動チェック
-	auto& Data = *BeginItr;
-	EXPECT_EQ(0, Data.Score);
-	EXPECT_EQ("Test0", Data.Name);
+	{
+		auto TestItr = pList->GetBegin();
+		auto& TestData = *TestItr;
+		EXPECT_EQ(2, TestData.Score);
+		EXPECT_EQ("Test2", TestData.Name);
+	}
+
+	// 末尾要素を削除して、先頭要素を確認する
+	auto EndItr = pList->GetEnd();
+	--EndItr;
+	pList->Delete(EndItr);
+
+	// 挙動チェック
+	{
+		auto TestItr = pList->GetBegin();
+		auto& TestData = *TestItr;
+		EXPECT_EQ(2, TestData.Score);
+		EXPECT_EQ("Test2", TestData.Name);
+	}
 }
 
 #pragma endregion
@@ -945,144 +914,125 @@ TEST(GetBeginConstIterator, When2ItemExist)
 * @brief	データの挿入を行った後に、呼び出した際の挙動
 * @details	ID:32
 *			先頭コンストイテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭に挿入した後に先頭コンストイテレータを取得した時の挙動をチェックします。
+*			先頭, 末尾, 先頭でも末尾でもない位置に挿入した後に先頭コンストイテレータを取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
-TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenInsertBegin)
+TEST(GetBeginConstIterator, WhenInsertBegin)
 {
+	// リスト
+	LinkedList List;
+
 	// 先頭にデータを挿入する
 	ScoreData Data;
 	Data.Score = 32;
-	Data.Name = "Test32";
-	auto Itr = pList->GetBegin();
-	ASSERT_TRUE(pList->Insert(Itr, Data));
+	Data.Name = "Test32_Begin";
+	auto Itr = List.GetBegin();
+	ASSERT_TRUE(List.Insert(Itr, Data));
 
-	// 先頭コンストイテレータを取得
-	auto BeginItr = pList->GetConstBegin();
-
-	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(32, TestData.Score);
-	EXPECT_EQ("Test32", TestData.Name);
-}
-
-/**
-* @brief	データの挿入を行った後に、呼び出した際の挙動
-* @details	ID:32
-*			先頭コンストイテレータの取得のテストです。
-*			リストに複数の要素があるとき、末尾に挿入した後に先頭コンストイテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenInsertEnd)
-{
-	// 末尾にデータを挿入する
-	ScoreData Data;
-	Data.Score = 32;
-	Data.Name = "Test32";
-	auto Itr = pList->GetEnd();
-	ASSERT_TRUE(pList->Insert(Itr, Data));
-
-	// 先頭コンストイテレータを取得
-	auto BeginItr = pList->GetConstBegin();
+	// 先頭イテレータを取得
+	auto BeginItr = List.GetConstBegin();
 
 	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(0, TestData.Score);
-	EXPECT_EQ("Test0", TestData.Name);
-}
+	{
+		auto& TestData = *BeginItr;
+		EXPECT_EQ(32, TestData.Score);
+		EXPECT_EQ("Test32_Begin", TestData.Name);
+	}
 
-/**
-* @brief	データの挿入を行った後に、呼び出した際の挙動
-* @details	ID:32
-*			先頭コンストイテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭でも末尾でもない位置に挿入した後に先頭コンストイテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenInsertCenter)
-{
+	// 末尾にデータを追加する
+	Data.Score = 33;
+	Data.Name = "Test33_End";
+	Itr = List.GetEnd();
+	ASSERT_TRUE(List.Insert(Itr, Data));
+
+	// 先頭イテレータを再取得
+	BeginItr = List.GetConstBegin();
+
+	// 挙動チェック
+	{
+		auto& TestData = *BeginItr;
+		EXPECT_EQ(32, TestData.Score);
+		EXPECT_EQ("Test32_Begin", TestData.Name);
+	}
+
 	// 先頭でも末尾でもない位置にデータを挿入する
-	ScoreData Data;
-	Data.Score = 32;
-	Data.Name = "Test32";
-	auto Itr = pList->GetBegin();
+	Data;
+	Data.Score = 34;
+	Data.Name = "Test34_Center";
+	Itr = List.GetBegin();
 	++Itr;
-	ASSERT_TRUE(pList->Insert(Itr, Data));
+	ASSERT_TRUE(List.Insert(Itr, Data));
 
-	// 先頭コンストイテレータを取得
-	auto BeginItr = pList->GetConstBegin();
+	// 先頭イテレータを再取得
+	BeginItr = List.GetConstBegin();
 
 	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(0, TestData.Score);
-	EXPECT_EQ("Test0", TestData.Name);
+	{
+		auto& TestData = *BeginItr;
+		EXPECT_EQ(32, TestData.Score);
+		EXPECT_EQ("Test32_Begin", TestData.Name);
+	}
 }
 
 /**
 * @brief	データの削除を行った後に、呼び出した際の挙動
 * @details	ID:33
 *			先頭コンストイテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭要素を削除した後に先頭コンストイテレータを取得した時の挙動をチェックします。
+*			リストに複数の要素があるとき、先頭要素, 末尾要素, 先頭でも末尾でもない要素を削除した後に先頭コンストイテレータを取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
 TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenDeleteBegin)
 {
-	// 先頭要素を削除する
-	auto Itr = pList->GetBegin();
-	ASSERT_TRUE(pList->Delete(Itr));
+	// 中央(先頭でも末尾でもない)要素を削除
+	// 先頭要素を削除
+	// 末尾要素を削除
+	// の順で確認する。
+	// なので、データが4つ以上必要になるためもう1つ追加する。
+	{
+		ScoreData Data{ 3, "Test3" };
+		auto Itr = pList->GetEnd();
+		pList->Insert(Itr, Data);
+	}
 
-	// 先頭コンストイテレータを取得
-	auto BeginItr = pList->GetConstBegin();
+	// 先頭イテレータを取得して、先頭でも末尾でもない要素に進める
+	auto CenterItr = pList->GetBegin();
+	++CenterItr;
 
-	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(1, TestData.Score);
-	EXPECT_EQ("Test1", TestData.Name);
-}
-
-/**
-* @brief	データの削除を行った後に、呼び出した際の挙動
-* @details	ID:33
-*			先頭コンストイテレータの取得のテストです。
-*			リストに複数の要素があるとき、末尾要素を削除した後に先頭コンストイテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenDeleteEnd)
-{
-	// 末尾要素を削除する
-	auto Itr = pList->GetEnd();
-	--Itr;
-	ASSERT_TRUE(pList->Delete(Itr));
-
-	// 先頭コンストイテレータを取得
-	auto BeginItr = pList->GetConstBegin();
+	// 先頭でも末尾でもない要素を削除して、先頭要素を確認する
+	pList->Delete(CenterItr);
 
 	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(0, TestData.Score);
-	EXPECT_EQ("Test0", TestData.Name);
-}
+	{
+		auto TestItr = pList->GetConstBegin();
+		auto& TestData = *TestItr;
+		EXPECT_EQ(0, TestData.Score);
+		EXPECT_EQ("Test0", TestData.Name);
+	}
 
-/**
-* @brief	データの削除を行った後に、呼び出した際の挙動
-* @details	ID:33
-*			先頭コンストイテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭でも末尾でもない要素を削除した後に先頭コンストイテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetBeginConstIteratorWhenDeleteCenter)
-{
-	// 先頭でも末尾でもない要素を削除する
-	auto Itr = pList->GetBegin();
-	++Itr;
-	ASSERT_TRUE(pList->Delete(Itr));
-
-	// 先頭コンストイテレータを取得
-	auto BeginItr = pList->GetConstBegin();
+	// 先頭要素を削除して、先頭要素を確認する
+	auto BeginItr = pList->GetBegin();
+	pList->Delete(BeginItr);
 
 	// 挙動チェック
-	auto& TestData = *BeginItr;
-	EXPECT_EQ(0, TestData.Score);
-	EXPECT_EQ("Test0", TestData.Name);
+	{
+		auto TestItr = pList->GetConstBegin();
+		auto& TestData = *TestItr;
+		EXPECT_EQ(2, TestData.Score);
+		EXPECT_EQ("Test2", TestData.Name);
+	}
+
+	// 末尾要素を削除して、先頭要素を確認する
+	auto EndItr = pList->GetEnd();
+	--EndItr;
+	pList->Delete(EndItr);
+
+	// 挙動チェック
+	{
+		auto TestItr = pList->GetConstBegin();
+		auto& TestData = *TestItr;
+		EXPECT_EQ(2, TestData.Score);
+		EXPECT_EQ("Test2", TestData.Name);
+	}
 }
 
 #pragma endregion
@@ -1108,9 +1058,7 @@ TEST(GetEndIterator, WhenEmpty)
 	auto Itr = List.GetEnd();
 
 	// 挙動チェック
-	EXPECT_DEATH({
-		auto & Data = *Itr;
-		}, ".*Reference To DummyNode.*");
+	EXPECT_DEATH(*Itr, ".*Reference To DummyNode.*");
 #else
 	SUCCEED();
 #endif
@@ -1129,8 +1077,8 @@ TEST(GetEndIterator, When1ItemExist)
 
 	// データを1件追加
 	ScoreData Data;
-	Data.Score = 24;
-	Data.Name = "Test24";
+	Data.Score = 36;
+	Data.Name = "Test36";
 	auto Itr = List.GetBegin();
 	ASSERT_TRUE(List.Insert(Itr, Data));
 
@@ -1140,8 +1088,8 @@ TEST(GetEndIterator, When1ItemExist)
 
 	// 挙動チェック
 	auto& TestData = *EndItr;
-	EXPECT_EQ(24, TestData.Score);
-	EXPECT_EQ("Test24", TestData.Name);
+	EXPECT_EQ(36, TestData.Score);
+	EXPECT_EQ("Test36", TestData.Name);
 }
 
 /**
@@ -1180,150 +1128,131 @@ TEST(GetEndIterator, When2ItemExist)
 * @brief	データの挿入を行った後に、呼び出した際の挙動
 * @details	ID:38
 *			末尾イテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭に挿入した後に末尾イテレータを取得した時の挙動をチェックします。
+*			先頭, 末尾, 先頭でも末尾でもない位置に挿入した後に末尾イテレータを取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
-TEST_F(LinkedListTestFixture, GetEndIteratorWhenInsertBegin)
+TEST(GetEndIterator, WhenInsertBegin)
 {
+	// リスト
+	LinkedList List;
+
 	// 先頭にデータを挿入する
 	ScoreData Data;
 	Data.Score = 38;
-	Data.Name = "Test38";
-	auto Itr = pList->GetBegin();
-	ASSERT_TRUE(pList->Insert(Itr, Data));
+	Data.Name = "Test38_Begin";
+	auto Itr = List.GetBegin();
+	ASSERT_TRUE(List.Insert(Itr, Data));
 
 	// 末尾イテレータを取得
-	auto EndItr = pList->GetEnd();
-	--EndItr;
+	auto EndItr = List.GetEnd();
+	--EndItr;	// 適切に値を参照できないので前に進める
 
 	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(2, TestData.Score);
-	EXPECT_EQ("Test2", TestData.Name);
-}
+	{
+		auto& TestData = *EndItr;
+		EXPECT_EQ(38, TestData.Score);
+		EXPECT_EQ("Test38_Begin", TestData.Name);
+	}
 
-/**
-* @brief	データの挿入を行った後に、呼び出した際の挙動
-* @details	ID:38
-*			末尾イテレータの取得のテストです。
-*			リストに複数の要素があるとき、末尾に挿入した後に末尾イテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetEndIteratorWhenInsertEnd)
-{
-	// 末尾にデータを挿入する
-	ScoreData Data;
-	Data.Score = 38;
-	Data.Name = "Test38";
-	auto Itr = pList->GetEnd();
-	ASSERT_TRUE(pList->Insert(Itr, Data));
+	// 末尾にデータを追加する
+	Data.Score = 39;
+	Data.Name = "Test39_End";
+	Itr = List.GetEnd();
+	ASSERT_TRUE(List.Insert(Itr, Data));
 
-	// 末尾イテレータを取得
-	auto EndItr = pList->GetEnd();
-	--EndItr;
+	// 末尾イテレータを再取得
+	EndItr = List.GetEnd();
+	--EndItr;	// 適切に値を参照できないので前に進める
 
 	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(38, TestData.Score);
-	EXPECT_EQ("Test38", TestData.Name);
-}
+	{
+		auto& TestData = *EndItr;
+		EXPECT_EQ(39, TestData.Score);
+		EXPECT_EQ("Test39_End", TestData.Name);
+	}
 
-/**
-* @brief	データの挿入を行った後に、呼び出した際の挙動
-* @details	ID:38
-*			末尾イテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭でも末尾でもない位置に挿入した後に末尾イテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetEndIteratorWhenInsertCenter)
-{
 	// 先頭でも末尾でもない位置にデータを挿入する
-	ScoreData Data;
-	Data.Score = 26;
-	Data.Name = "Test26";
-	auto Itr = pList->GetBegin();
+	Data;
+	Data.Score = 40;
+	Data.Name = "Test40_Center";
+	Itr = List.GetBegin();
 	++Itr;
-	ASSERT_TRUE(pList->Insert(Itr, Data));
+	ASSERT_TRUE(List.Insert(Itr, Data));
 
-	// 末尾イテレータを取得
-	auto EndItr = pList->GetEnd();
-	--EndItr;
+	// 末尾イテレータを再取得
+	EndItr = List.GetEnd();
+	--EndItr;	// 適切に値を参照できないので前に進める
 
 	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(2, TestData.Score);
-	EXPECT_EQ("Test2", TestData.Name);
+	{
+		auto& TestData = *EndItr;
+		EXPECT_EQ(39, TestData.Score);
+		EXPECT_EQ("Test39_End", TestData.Name);
+	}
 }
 
 /**
 * @brief	データの削除を行った後に、呼び出した際の挙動
 * @details	ID:39
 *			末尾イテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭要素を削除した後に末尾イテレータを取得した時の挙動をチェックします。
+*			リストに複数の要素があるとき、先頭要素, 末尾要素, 先頭でも末尾でもない要素を削除した後に末尾イテレータを取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
 TEST_F(LinkedListTestFixture, GetEndIteratorWhenDeleteBegin)
 {
-	// 先頭要素を削除する
-	auto Itr = pList->GetBegin();
-	ASSERT_TRUE(pList->Delete(Itr));
+	// 中央(先頭でも末尾でもない)要素を削除
+	// 先頭要素を削除
+	// 末尾要素を削除
+	// の順で確認する。
+	// なので、データが4つ以上必要になるためもう1つ追加する。
+	{
+		ScoreData Data{ 3, "Test3" };
+		auto Itr = pList->GetEnd();
+		pList->Insert(Itr, Data);
+	}
 
-	// 末尾イテレータを取得
+	// 先頭イテレータを取得して、先頭でも末尾でもない要素に進める
+	auto CenterItr = pList->GetBegin();
+	++CenterItr;
+
+	// 先頭でも末尾でもない要素を削除して、末尾要素を確認する
+	pList->Delete(CenterItr);
+
+	// 挙動チェック
+	{
+		auto TestItr = pList->GetEnd();
+		--TestItr;		// 適切に値を参照できないので前に進める
+		auto& TestData = *TestItr;
+		EXPECT_EQ(3, TestData.Score);
+		EXPECT_EQ("Test3", TestData.Name);
+	}
+
+	// 先頭要素を削除して、末尾要素を確認する
+	auto BeginItr = pList->GetBegin();
+	pList->Delete(BeginItr);
+
+	// 挙動チェック
+	{
+		auto TestItr = pList->GetEnd();
+		--TestItr;		// 適切に値を参照できないので前に進める
+		auto& TestData = *TestItr;
+		EXPECT_EQ(3, TestData.Score);
+		EXPECT_EQ("Test3", TestData.Name);
+	}
+
+	// 末尾要素を削除して、末尾要素を確認する
 	auto EndItr = pList->GetEnd();
 	--EndItr;
+	pList->Delete(EndItr);
 
 	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(2, TestData.Score);
-	EXPECT_EQ("Test2", TestData.Name);
-}
-
-/**
-* @brief	データの削除を行った後に、呼び出した際の挙動
-* @details	ID:39
-*			末尾イテレータの取得のテストです。
-*			リストに複数の要素があるとき、末尾要素を削除した後に末尾イテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetEndIteratorWhenDeleteEnd)
-{
-	// 末尾要素を削除する
-	auto Itr = pList->GetEnd();
-	--Itr;
-	ASSERT_TRUE(pList->Delete(Itr));
-
-	// 末尾イテレータを取得
-	auto EndItr = pList->GetEnd();
-	--EndItr;
-
-	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(1, TestData.Score);
-	EXPECT_EQ("Test1", TestData.Name);
-}
-
-/**
-* @brief	データの削除を行った後に、呼び出した際の挙動
-* @details	ID:39
-*			末尾イテレータの取得のテストです。
-*			リストに複数の要素があるとき、先頭でも末尾でもない要素を削除した後に末尾イテレータを取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetEndIteratorWhenDeleteCenter)
-{
-	// 先頭でも末尾でもない要素を削除する
-	auto Itr = pList->GetBegin();
-	++Itr;
-	ASSERT_TRUE(pList->Delete(Itr));
-
-	// 末尾イテレータを取得
-	auto EndItr = pList->GetConstEnd();
-	--EndItr;
-
-	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(2, TestData.Score);
-	EXPECT_EQ("Test2", TestData.Name);
+	{
+		auto TestItr = pList->GetEnd();
+		--TestItr;		// 適切に値を参照できないので前に進める
+		auto& TestData = *TestItr;
+		EXPECT_EQ(2, TestData.Score);
+		EXPECT_EQ("Test2", TestData.Name);
+	}
 }
 
 #pragma endregion
@@ -1421,150 +1350,132 @@ TEST(GetEndConstIterator, When2ItemExist)
 * @brief	データの挿入を行った後に、呼び出した際の挙動
 * @details	ID:44
 *			末尾コンストイテレータの取得の取得のテストです。
-*			リストに複数の要素があるとき、先頭に挿入した後に末尾コンストイテレータの取得を取得した時の挙動をチェックします。
+*			先頭, 末尾, 先頭でも末尾でもない位置に挿入した後に末尾コンストイテレータの取得を取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
 TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenInsertBegin)
 {
+	// リスト
+	LinkedList List;
+
 	// 先頭にデータを挿入する
 	ScoreData Data;
 	Data.Score = 44;
-	Data.Name = "Test44";
-	auto Itr = pList->GetBegin();
-	ASSERT_TRUE(pList->Insert(Itr, Data));
+	Data.Name = "Test44_Begin";
+	auto Itr = List.GetBegin();
+	ASSERT_TRUE(List.Insert(Itr, Data));
 
-	// 末尾コンストイテレータの取得を取得
-	auto EndItr = pList->GetConstEnd();
-	--EndItr;
-
-	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(2, TestData.Score);
-	EXPECT_EQ("Test2", TestData.Name);
-}
-
-/**
-* @brief	データの挿入を行った後に、呼び出した際の挙動
-* @details	ID:44
-*			末尾コンストイテレータの取得の取得のテストです。
-*			リストに複数の要素があるとき、末尾に挿入した後に末尾コンストイテレータの取得を取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenInsertEnd)
-{
-	// 末尾にデータを挿入する
-	ScoreData Data;
-	Data.Score = 44;
-	Data.Name = "Test44";
-	auto Itr = pList->GetEnd();
-	ASSERT_TRUE(pList->Insert(Itr, Data));
-
-	// 末尾コンストイテレータの取得を取得
-	auto EndItr = pList->GetConstEnd();
-	--EndItr;
+	// 末尾イテレータを取得
+	auto EndItr = List.GetConstEnd();
+	--EndItr;	// 適切に値を参照できないので前に進める
 
 	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(44, TestData.Score);
-	EXPECT_EQ("Test44", TestData.Name);
-}
+	{
+		auto& TestData = *EndItr;
+		EXPECT_EQ(44, TestData.Score);
+		EXPECT_EQ("Test44_Begin", TestData.Name);
+	}
 
-/**
-* @brief	データの挿入を行った後に、呼び出した際の挙動
-* @details	ID:44
-*			末尾コンストイテレータの取得の取得のテストです。
-*			リストに複数の要素があるとき、先頭でも末尾でもない位置に挿入した後に末尾コンストイテレータの取得を取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenInsertCenter)
-{
+	// 末尾にデータを追加する
+	Data.Score = 45;
+	Data.Name = "Test45_End";
+	Itr = List.GetEnd();
+	ASSERT_TRUE(List.Insert(Itr, Data));
+
+	// 末尾イテレータを再取得
+	EndItr = List.GetConstEnd();
+	--EndItr;	// 適切に値を参照できないので前に進める
+
+	// 挙動チェック
+	{
+		auto& TestData = *EndItr;
+		EXPECT_EQ(45, TestData.Score);
+		EXPECT_EQ("Test45_End", TestData.Name);
+	}
+
 	// 先頭でも末尾でもない位置にデータを挿入する
-	ScoreData Data;
-	Data.Score = 44;
-	Data.Name = "Test44";
-	auto Itr = pList->GetBegin();
+	Data;
+	Data.Score = 46;
+	Data.Name = "Test46_Center";
+	Itr = List.GetBegin();
 	++Itr;
-	ASSERT_TRUE(pList->Insert(Itr, Data));
+	ASSERT_TRUE(List.Insert(Itr, Data));
 
-	// 末尾コンストイテレータの取得を取得
-	auto EndItr = pList->GetConstEnd();
-	--EndItr;
+	// 末尾イテレータを再取得
+	EndItr = List.GetConstEnd();
+	--EndItr;	// 適切に値を参照できないので前に進める
 
 	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(2, TestData.Score);
-	EXPECT_EQ("Test2", TestData.Name);
+	{
+		auto& TestData = *EndItr;
+		EXPECT_EQ(45, TestData.Score);
+		EXPECT_EQ("Test45_End", TestData.Name);
+	}
 }
 
 /**
 * @brief	データの削除を行った後に、呼び出した際の挙動
 * @details	ID:45
 *			末尾コンストイテレータの取得の取得のテストです。
-*			リストに複数の要素があるとき、先頭要素を削除した後に末尾コンストイテレータの取得を取得した時の挙動をチェックします。
+*			リストに複数の要素があるとき、先頭要素, 末尾要素, 先頭でも末尾でもない要素を削除した後に末尾コンストイテレータの取得を取得した時の挙動をチェックします。
 *			先頭要素を指すイテレータを取得できれば成功です。
 */
 TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenDeleteBegin)
 {
-	// 先頭要素を削除する
-	auto Itr = pList->GetBegin();
-	ASSERT_TRUE(pList->Delete(Itr));
+	// 中央(先頭でも末尾でもない)要素を削除
+	// 先頭要素を削除
+	// 末尾要素を削除
+	// の順で確認する。
+	// なので、データが4つ以上必要になるためもう1つ追加する。
+	{
+		ScoreData Data{ 3, "Test3" };
+		auto Itr = pList->GetEnd();
+		pList->Insert(Itr, Data);
+	}
 
-	// 末尾コンストイテレータの取得を取得
-	auto EndItr = pList->GetConstEnd();
-	--EndItr;
+	// 先頭イテレータを取得して、先頭でも末尾でもない要素に進める
+	auto CenterItr = pList->GetBegin();
+	++CenterItr;
 
-	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(2, TestData.Score);
-	EXPECT_EQ("Test2", TestData.Name);
-}
-
-/**
-* @brief	データの削除を行った後に、呼び出した際の挙動
-* @details	ID:45
-*			末尾コンストイテレータの取得の取得のテストです。
-*			リストに複数の要素があるとき、末尾要素を削除した後に末尾コンストイテレータの取得を取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenDeleteEnd)
-{
-	// 末尾要素を削除する
-	auto Itr = pList->GetEnd();
-	--Itr;
-	ASSERT_TRUE(pList->Delete(Itr));
-
-	// 末尾コンストイテレータの取得を取得
-	auto EndItr = pList->GetConstEnd();
-	--EndItr;
+	// 先頭でも末尾でもない要素を削除して、末尾要素を確認する
+	pList->Delete(CenterItr);
 
 	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(1, TestData.Score);
-	EXPECT_EQ("Test1", TestData.Name);
-}
+	{
+		auto TestItr = pList->GetConstEnd();
+		--TestItr;		// 適切に値を参照できないので前に進める
 
-/**
-* @brief	データの削除を行った後に、呼び出した際の挙動
-* @details	ID:45
-*			末尾コンストイテレータの取得の取得のテストです。
-*			リストに複数の要素があるとき、先頭でも末尾でもない要素を削除した後に末尾コンストイテレータの取得を取得した時の挙動をチェックします。
-*			先頭要素を指すイテレータを取得できれば成功です。
-*/
-TEST_F(LinkedListTestFixture, GetEndConstIteratorWhenDeleteCenter)
-{
-	// 先頭でも末尾でもない要素を削除する
-	auto Itr = pList->GetBegin();
-	++Itr;
-	ASSERT_TRUE(pList->Delete(Itr));
+		auto& TestData = *TestItr;
+		EXPECT_EQ(3, TestData.Score);
+		EXPECT_EQ("Test3", TestData.Name);
+	}
 
-	// 末尾コンストイテレータの取得を取得
-	auto EndItr = pList->GetConstEnd();
-	--EndItr;
+	// 先頭要素を削除して、末尾要素を確認する
+	auto BeginItr = pList->GetBegin();
+	pList->Delete(BeginItr);
 
 	// 挙動チェック
-	auto& TestData = *EndItr;
-	EXPECT_EQ(2, TestData.Score);
-	EXPECT_EQ("Test2", TestData.Name);
+	{
+		auto TestItr = pList->GetConstEnd();
+		--TestItr;		// 適切に値を参照できないので前に進める
+		auto& TestData = *TestItr;
+		EXPECT_EQ(3, TestData.Score);
+		EXPECT_EQ("Test3", TestData.Name);
+	}
+
+	// 末尾要素を削除して、末尾要素を確認する
+	auto EndItr = pList->GetEnd();
+	--EndItr;
+	pList->Delete(EndItr);
+
+	// 挙動チェック
+	{
+		auto TestItr = pList->GetConstEnd();
+		--TestItr;		// 適切に値を参照できないので前に進める
+		auto& TestData = *TestItr;
+		EXPECT_EQ(2, TestData.Score);
+		EXPECT_EQ("Test2", TestData.Name);
+	}
 }
 
 #pragma endregion
