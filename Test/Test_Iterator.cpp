@@ -25,7 +25,6 @@ using IteratorCopyAssignmentF = LinkedListTestFixture;
 using IteratorCompareEQF = LinkedListTestFixture;
 using IteratorCompareNEF = LinkedListTestFixture;
 
-
 #pragma region ***** イテレータの指す要素を取得する *****
 
 /**
